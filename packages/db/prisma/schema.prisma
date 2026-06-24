@@ -1,14 +1,110 @@
-generator client {
-  provider = "prisma-client-js"
-}
+// packages/db/prisma/schema.prisma
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// TODO: Replace with the exact production PostgreSQL Prisma code finalized in the last transmission.
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  CUSTOMER
+  SALES_REP
+  ADMIN
+}
+
+enum VehicleStatus {
+  AVAILABLE
+  PENDING_RESERVATION
+  RESERVED
+  SOLD
+  IN_TRANSIT
+  MAINTENANCE
+}
+
+enum OrderStatus {
+  PENDING_DEPOSIT
+  DEPOSIT_SECURED
+  FINANCING_APPROVED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
 model User {
-  id    String @id @default(uuid())
-  email String @unique
+  id           String             @id @default(uuid())
+  email        String             @unique
+  passwordHash String
+  role         UserRole           @default(CUSTOMER)
+  firstName    String
+  lastName     String
+  phone        String?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  orders       ReservationOrder[]
+
+  @@index([email])
+}
+
+model DealershipLocation {
+  id          String             @id @default(uuid())
+  code        String             @unique
+  name        String
+  address     String
+  city        String
+  country     String             @default("Morocco")
+  phone       String
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  inventory   VehicleInventory[]
+
+  @@index([code])
+  @@index([city])
+}
+
+model VehicleInventory {
+  id                   String             @id @default(uuid())
+  vin                  String             @unique @db.VarChar(17)
+  make                 String
+  model                String
+  year                 Int
+  trim                 String?
+  price                Decimal            @db.Decimal(12, 2)
+  mileage              Int                @default(0)
+  exteriorColor        String
+  status               VehicleStatus      @default(AVAILABLE)
+  dealershipLocationId String
+
+  location             DealershipLocation @relation(fields: [dealershipLocationId], references: [id])
+  orders               ReservationOrder[]
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  @@index([vin])
+  @@index([status, make, model])
+  @@index([dealershipLocationId])
+}
+
+model ReservationOrder {
+  id            String           @id @default(uuid())
+  orderNumber   String           @unique
+  userId        String
+  vehicleId     String
+  status        OrderStatus      @default(PENDING_DEPOSIT)
+  depositAmount Decimal          @db.Decimal(10, 2)
+  finalPrice    Decimal          @db.Decimal(12, 2)
+  expiresAt     DateTime       
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  user          User             @relation(fields: [userId], references: [id])
+  vehicle       VehicleInventory @relation(fields: [vehicleId], references: [id])
+
+  @@index([orderNumber])
+  @@index([userId, status])
+  @@index([vehicleId, status])
 }
