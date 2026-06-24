@@ -1,0 +1,14 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// TODO: Replace with the exact production PostgreSQL Prisma code finalized in the last transmission.
+model User {
+  id    String @id @default(uuid())
+  email String @unique
+}
