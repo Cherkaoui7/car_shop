@@ -1,0 +1,38 @@
+name: Aurora Gatekeeper
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify-pipeline:
+    name: Typecheck, Lint & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # Required for Turborepo git-diff calculations
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install Workspace Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Forge Relational Client
+        run: pnpm --filter @carshop/db generate
+
+      - name: Execute Parallel Verification
+        run: pnpm turbo run build --dry=false
