@@ -1,0 +1,1 @@
+{ "name": "@carshop/api-client", "version": "0.1.0", "private": true, "main": "./src/index.ts", "types": "./src/index.ts", "dependencies": { "@carshop/schema": "workspace:*", "axios": "^1.6.7" } }
