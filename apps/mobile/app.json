@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "Aurora Field Command",
+    "slug": "aurora-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "jsEngine": "hermes"
+  }
+}
