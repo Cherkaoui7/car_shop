@@ -5,8 +5,8 @@ import { fetchCatalog, apiClient } from '@carshop/api-client';
 import { colors } from '@carshop/design-tokens';
 import { VehicleDTO } from '@carshop/schema';
 
-// Android Emulators resolve host machines via 10.0.2.2. iOS uses localhost.
-const NATIVE_API_URL = Platform.OS === 'android' ? 'http://10.0.2.2:5000/api/v1' : 'http://localhost:5000/api/v1';
+// Use the computer's actual local IP address for physical devices on Wi-Fi
+const NATIVE_API_URL = 'http://192.168.1.13:5000/api/v1';
 apiClient.defaults.baseURL = NATIVE_API_URL;
 
 export default function App() {
