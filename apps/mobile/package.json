@@ -13,12 +13,12 @@
     "@carshop/api-client": "workspace:*",
     "@carshop/design-tokens": "workspace:*",
     "@carshop/schema": "workspace:*",
-    "@expo/metro-runtime": "~3.1.3",
-    "expo": "~50.0.14",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-native": "0.73.6",
-    "react-native-web": "~0.19.6"
+    "@expo/metro-runtime": "~56.0.0",
+    "expo": "~56.0.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-native": "0.76.0",
+    "react-native-web": "~0.19.13"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
