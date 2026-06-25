@@ -15,14 +15,14 @@
     "@carshop/schema": "workspace:*",
     "@expo/metro-runtime": "~56.0.0",
     "expo": "~56.0.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-native": "0.76.0",
-    "react-native-web": "~0.19.13"
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.85.3",
+    "react-native-web": "~0.21.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@types/react": "~18.2.45",
-    "typescript": "^5.3.3"
+    "@types/react": "~19.2.17",
+    "typescript": "^6.0.3"
   }
 }
