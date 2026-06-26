@@ -1,47 +1,94 @@
-import { fetchCatalog } from '@carshop/api-client';
+'use client';
+
+// apps/web/src/app/page.tsx
+// PROJECT OBSIDIAN — Landing Page
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import CyberRain from '../components/CyberRain';
 
-export const dynamic = 'force-dynamic';
-
-export default async function HomePage() {
-  const inventory = await fetchCatalog().catch(() => []);
-
+export default function HomePage() {
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="border-b border-slate-200 pb-5 mb-8 flex justify-between items-end">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Aurora Command Center</h1>
-          <p className="text-slate-500 mt-1">Live Relational Vehicle Terminal</p>
-        </div>
-        <span className="text-xs font-mono bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-full border border-blue-200">SYSTEM ONLINE</span>
-      </div>
+    <div className="flex flex-col min-h-[calc(100vh-130px)] relative">
+      {/* ═══ GLOBAL PAGE BACKGROUNDS ═══ */}
+      <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/15 via-background to-background" />
+      <CyberRain />
+      
+      {/* ═══ HERO SECTION ═══ */}
+      <section className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 py-20">
+        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
+          <motion.span 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-xs font-bold tracking-widest mb-6"
+          >
+            TERMINAL 04 ONLINE
+          </motion.span>
+          
+          <motion.h1 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="text-5xl sm:text-7xl font-black text-text font-grotesk tracking-tighter leading-tight mb-6 drop-shadow-2xl"
+          >
+            ENTER THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primaryLight">GRID</span>
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+            className="text-textMuted text-lg sm:text-xl font-mono max-w-2xl mb-12 leading-relaxed drop-shadow-md"
+          >
+            Acquire premium automotive assets through a decentralized, high-fidelity commerce terminal. 
+            Direct bare-metal database access with zero latency.
+          </motion.p>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {inventory.length === 0 ? (
-          <div className="col-span-full p-12 text-center rounded-2xl border-2 border-dashed border-slate-300 bg-white">
-            <p className="text-red-500 font-mono text-sm">[NO_DATA_RETRIEVED]: Verify API Gateway is running.</p>
-          </div>
-        ) : (
-          inventory.map((vehicle: any) => (
-            <Link key={vehicle.id} href={`/inventory/${vehicle.id}`} className="block group">
-              <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between group-hover:border-blue-500 transition h-full">
-                <div className="p-6">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">{vehicle.vin}</span>
-                    <span className="text-xs font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-green-100 text-green-700">{vehicle.status}</span>
-                  </div>
-                  <h2 className="text-xl font-bold text-slate-900 mt-3">{vehicle.year} {vehicle.make} {vehicle.model}</h2>
-                  <p className="text-slate-500 text-sm mt-1 capitalize">{vehicle.exteriorColor} • {vehicle.mileage.toLocaleString()} km</p>
-                </div>
-                <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-lg font-bold text-slate-900">{Number(vehicle.price).toLocaleString('en-US', { style: 'currency', currency: 'MAD' })}</span>
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm group-hover:bg-blue-800">VIEW</button>
-                </div>
-              </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            <Link href="/collection" className="relative group overflow-hidden rounded-xl bg-slate-950 p-px font-mono text-sm font-bold text-primary shadow-cyan-glow active:scale-[0.99] transition w-64 block">
+              <span className="absolute inset-0 animate-laser-spin bg-conic-laser opacity-75 group-hover:opacity-100 transition" />
+              <span className="relative flex w-full items-center justify-center gap-3 rounded-[11px] bg-slate-900/90 px-8 py-5 backdrop-blur-xl transition group-hover:bg-slate-900/70">
+                <span className="h-2 w-2 rounded-full bg-primary animate-ping" />
+                <span>ACCESS FLEET</span>
+              </span>
             </Link>
-          ))
-        )}
-      </div>
-    </main>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══ STATS BAR ═══ */}
+      <motion.section 
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.8 }}
+        className="border-t border-surfaceBorder bg-surface/20 backdrop-blur-md z-10 relative"
+      >
+        <div className="absolute inset-0 scanline-overlay opacity-30 pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-surfaceBorder/50">
+            <div className="text-center px-4">
+              <div className="text-3xl font-black font-grotesk text-text mb-1">04</div>
+              <div className="text-[10px] font-mono text-textDim tracking-widest uppercase">Global Sectors</div>
+            </div>
+            <div className="text-center px-4">
+              <div className="text-3xl font-black font-grotesk text-text mb-1">&lt; 1ms</div>
+              <div className="text-[10px] font-mono text-textDim tracking-widest uppercase">Query Latency</div>
+            </div>
+            <div className="text-center px-4">
+              <div className="text-3xl font-black font-grotesk text-primary mb-1">100%</div>
+              <div className="text-[10px] font-mono text-textDim tracking-widest uppercase">Mutex Integrity</div>
+            </div>
+            <div className="text-center px-4">
+              <div className="text-3xl font-black font-grotesk text-text mb-1">24/7</div>
+              <div className="text-[10px] font-mono text-textDim tracking-widest uppercase">System Uptime</div>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+    </div>
   );
 }
