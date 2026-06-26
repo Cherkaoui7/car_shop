@@ -15,6 +15,11 @@ export const fetchCatalog = async (filters?: any): Promise<VehicleDTO[]> => {
   return response.data.data;
 };
 
+export const reserveVehicle = async (data: { vehicleId: string, userId: string, depositAmount: number }) => {
+  const response = await apiClient.post('/inventory/reserve', data);
+  return response.data;
+};
+
 export const ingestVehicle = async (formData: FormData, token: string): Promise<VehicleDTO> => {
   const response = await apiClient.post('/admin/ingest', formData, {
     headers: {

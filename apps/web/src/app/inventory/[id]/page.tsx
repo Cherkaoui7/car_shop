@@ -2,6 +2,7 @@
 import { fetchVehicleById, resolveImageUrl } from '@carshop/api-client';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import ReservationButton from './ReservationButton';
 
 interface Props {
   params: { id: string };
@@ -24,6 +25,8 @@ export default async function VehicleDetailPage({ params }: Props) {
 
   const finalImageUrl = resolveImageUrl(vehicle.imageUrl);
   const depositRequired = Number(vehicle.price) * 0.10; // 10% strict deposit
+
+  const MOCK_USER_ID = "550e8400-e29b-41d4-a716-446655440001";
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-12">
@@ -82,9 +85,11 @@ export default async function VehicleDetailPage({ params }: Props) {
             </div>
 
             {vehicle.status === 'AVAILABLE' ? (
-              <button className="w-full py-4 bg-secondary hover:bg-secondary/90 text-surface font-bold rounded-xl shadow-lg shadow-secondary/20 transition transform active:scale-[0.99] flex justify-center items-center gap-2">
-                <span>AUTHORIZE 10% HOLD (MAD {depositRequired.toLocaleString()})</span>
-              </button>
+              <ReservationButton 
+                vehicleId={vehicle.id} 
+                userId={MOCK_USER_ID} 
+                depositAmount={depositRequired} 
+              />
             ) : (
               <div className="w-full py-4 bg-slate-100 text-slate-400 font-mono text-center text-sm rounded-xl border border-slate-200">
                 [UNIT CURRENTLY LOCKED BY ACTIVE SLA]
