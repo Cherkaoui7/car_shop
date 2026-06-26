@@ -19,9 +19,14 @@ app.use(cors({
   credentials: true
 }));
 
+import path from 'path';
+
 // Route Mounts
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/inventory', inventoryRoutes);
+
+// Static Uploads
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Health Check
 app.get('/health', (req, res) => {

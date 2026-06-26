@@ -2,14 +2,27 @@
   "name": "@carshop/web",
   "version": "0.1.0",
   "private": true,
-  "scripts": { "dev": "next dev --port 3000", "build": "next build", "start": "next start" },
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start"
+  },
   "dependencies": {
     "@carshop/api-client": "workspace:*",
     "@carshop/design-tokens": "workspace:*",
     "@carshop/schema": "workspace:*",
-    "next": "14.1.0", "react": "^18.2.0", "react-dom": "^18.2.0"
+    "@hookform/resolvers": "^5.4.0",
+    "next": "14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.80.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.24", "@types/react": "^18.2.61", "autoprefixer": "^10.4.18", "postcss": "^8.4.35", "tailwindcss": "^3.4.1", "typescript": "^5.3.3"
+    "@types/node": "^20.11.24",
+    "@types/react": "^18.2.61",
+    "autoprefixer": "^10.4.18",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3"
   }
 }

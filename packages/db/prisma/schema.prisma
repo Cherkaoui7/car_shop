@@ -76,6 +76,7 @@ model VehicleInventory {
   price                Decimal            @db.Decimal(12, 2)
   mileage              Int                @default(0)
   exteriorColor        String
+  imageUrl             String?
   status               VehicleStatus      @default(AVAILABLE)
   dealershipLocationId String
 
