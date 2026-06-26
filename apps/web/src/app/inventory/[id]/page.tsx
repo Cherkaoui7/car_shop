@@ -88,7 +88,9 @@ export default async function VehicleDetailPage({ params }: Props) {
 
             {vehicle.status === 'AVAILABLE' ? (
               <ReservationButton 
-                vehicleId={vehicle.id} 
+                vehicleId={vehicle.id}
+                vehicleName={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                vin={vehicle.vin}
                 userId={MOCK_USER_ID} 
                 depositAmount={depositRequired} 
               />

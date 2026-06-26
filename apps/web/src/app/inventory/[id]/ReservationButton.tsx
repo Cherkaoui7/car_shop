@@ -4,16 +4,20 @@
 import React, { useState } from 'react';
 import { reserveVehicle } from '@carshop/api-client';
 import { useRouter } from 'next/navigation';
+import jsPDF from 'jspdf';
 
-interface ReservationProps {
+interface Props {
   vehicleId: string;
+  vehicleName: string;
+  vin: string;
   userId: string;
   depositAmount: number;
 }
 
-export default function ReservationButton({ vehicleId, userId, depositAmount }: ReservationProps) {
+export default function ReservationButton({ vehicleId, vehicleName, vin, userId, depositAmount }: Props) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [securedOrder, setSecuredOrder] = useState<any | null>(null);
   const router = useRouter();
 
   const handleHoldAuthorization = async () => {
@@ -28,8 +32,10 @@ export default function ReservationButton({ vehicleId, userId, depositAmount }: 
       });
 
       if (response.success) {
-        // Trigger a fresh Next.js Server Component re-validation to lock the screen instantly
-        router.refresh();
+        setSecuredOrder(response.order);
+        // Removed router.refresh() because it causes the server to re-render the page
+        // with status="PENDING_RESERVATION", which immediately unmounts this component
+        // and hides the PDF download button!
       }
     } catch (error: any) {
       const errorMsg = error.response?.data?.error || "TRANSACTION_CONCURRENCY_VIOLATION";
@@ -41,6 +47,138 @@ export default function ReservationButton({ vehicleId, userId, depositAmount }: 
       setIsProcessing(false);
     }
   };
+
+  const downloadProformaPDF = () => {
+    if (!securedOrder) return;
+    const doc = new jsPDF();
+
+    // Helper to safely format numbers for jsPDF without Intl thin-space encoding issues
+    const formatCurrency = (amount: number) => {
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
+    // --- Premium Voucher Layout ---
+    
+    // Header Background
+    doc.setFillColor(15, 23, 42); // slate-900
+    doc.rect(0, 0, 210, 45, "F");
+
+    // Header Text
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(24);
+    doc.text("AURORA LOGISTICS", 20, 24);
+    
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(148, 163, 184); // slate-400
+    doc.text("OFFICIAL PROFORMA HOLD VOUCHER", 20, 32);
+    
+    // Watermark / Status Badge in Header
+    doc.setFillColor(16, 185, 129); // emerald-500
+    doc.rect(145, 15, 45, 12, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text("RATIFIED", 157, 23);
+
+    // Body content styling
+    doc.setTextColor(15, 23, 42);
+    
+    // Vehicle Details Section
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("ASSET MANIFEST", 20, 65);
+    
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(71, 85, 105); // slate-600
+    
+    // Key-Value Grid
+    const startY = 75;
+    const lineHeight = 10;
+    
+    doc.text("Ledger Ref No:", 20, startY);
+    doc.setTextColor(15, 23, 42);
+    doc.setFont("helvetica", "bold");
+    doc.text(securedOrder.orderNumber, 65, startY);
+    
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(71, 85, 105);
+    doc.text("Vehicle:", 20, startY + lineHeight);
+    doc.setTextColor(15, 23, 42);
+    doc.setFont("helvetica", "bold");
+    doc.text(vehicleName, 65, startY + lineHeight);
+    
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(71, 85, 105);
+    doc.text("Optical VIN:", 20, startY + lineHeight * 2);
+    doc.setTextColor(15, 23, 42);
+    doc.setFont("helvetica", "bold");
+    doc.text(vin, 65, startY + lineHeight * 2);
+
+    // Divider Line
+    doc.setDrawColor(226, 232, 240); // slate-200
+    doc.setLineWidth(0.5);
+    doc.line(20, 105, 190, 105);
+
+    // Financials Section (in a styled box)
+    doc.setFillColor(248, 250, 252); // slate-50
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(20, 115, 170, 45, 3, 3, "FD");
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(71, 85, 105);
+    doc.text("Hold Deposit Secured:", 30, 130);
+    
+    doc.setTextColor(16, 185, 129); // emerald-500
+    doc.setFont("helvetica", "bold");
+    doc.text(`MAD ${formatCurrency(Number(securedOrder.depositAmount))}`, 130, 130);
+
+    doc.setTextColor(71, 85, 105);
+    doc.setFont("helvetica", "normal");
+    doc.text("Total Unit Valuation:", 30, 145);
+    
+    doc.setTextColor(15, 23, 42);
+    doc.setFont("helvetica", "bold");
+    doc.text(`MAD ${formatCurrency(Number(securedOrder.finalPrice))}`, 130, 145);
+
+    // SLA Details
+    const slaDate = new Date(securedOrder.expiresAt).toLocaleString('en-US', {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    });
+    
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(225, 29, 72); // rose-600
+    doc.text(`MUTEX EXPIRATION SLA: ${slaDate}`, 20, 175);
+
+    // Footer
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(9);
+    doc.setTextColor(100, 116, 139);
+    doc.text("LEGAL NOTICE: Unit locked in PostgreSQL database for 48 hours awaiting wire funds.", 20, 185);
+
+    doc.save(`AURORA_${securedOrder.orderNumber}_VOUCHER.pdf`);
+  };
+
+  if (securedOrder) {
+    return (
+      <div className="flex flex-col gap-2 items-center p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+        <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-emerald-200 text-emerald-900">
+          TRANSACTION RATIFIED
+        </span>
+        <button
+          onClick={downloadProformaPDF}
+          className="w-full mt-4 py-4 bg-slate-900 hover:bg-slate-800 text-white font-mono font-bold text-xs rounded-xl shadow-md transition flex justify-center items-center gap-2"
+        >
+          DOWNLOAD PROFORMA VOUCHER (PDF)
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -54,7 +192,7 @@ export default function ReservationButton({ vehicleId, userId, depositAmount }: 
         }`}
       >
         {isProcessing ? (
-          <span className="font-mono text-sm animate-pulse">EXECUTING ATOMIC TRANSACTION...</span>
+          <span className="font-mono text-sm animate-pulse">WRITING MUTEX...</span>
         ) : (
           <span>AUTHORIZE 10% HOLD (MAD {depositAmount.toLocaleString()})</span>
         )}
