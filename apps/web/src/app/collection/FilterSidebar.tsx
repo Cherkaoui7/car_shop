@@ -40,29 +40,33 @@ export default function FilterSidebar() {
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
         </svg>
-        DATA FILTERS
+        FILTRES
       </h2>
       
       <div className="space-y-6">
         <div>
-          <h3 className="text-xs font-mono font-bold text-textMuted mb-3 tracking-widest">STATUS</h3>
+          <h3 className="text-xs font-mono font-bold text-textMuted mb-3 tracking-widest">STATUT</h3>
           <div className="space-y-2 font-mono text-xs">
-            {['AVAILABLE', 'PENDING_RESERVATION', 'SOLD'].map(status => (
-              <label key={status} className="flex items-center gap-3 cursor-pointer group">
+            {[
+              { val: 'AVAILABLE', label: 'DISPONIBLE' },
+              { val: 'PENDING_RESERVATION', label: 'EN RÉSERVATION' },
+              { val: 'SOLD', label: 'VENDU' }
+            ].map(status => (
+              <label key={status.val} className="flex items-center gap-3 cursor-pointer group">
                 <input 
                   type="checkbox" 
-                  checked={statuses.includes(status)}
-                  onChange={() => handleStatusToggle(status)}
+                  checked={statuses.includes(status.val)}
+                  onChange={() => handleStatusToggle(status.val)}
                   className="w-4 h-4 rounded border-surfaceBorder bg-slate-900 text-primary focus:ring-primary/50 focus:ring-offset-0" 
                 />
-                <span className="text-textDim group-hover:text-text transition">{status}</span>
+                <span className="text-textDim group-hover:text-text transition">{status.label}</span>
               </label>
             ))}
           </div>
         </div>
         
         <div className="pt-4 border-t border-surfaceBorder">
-          <h3 className="text-xs font-mono font-bold text-textMuted mb-3 tracking-widest">MANUFACTURER</h3>
+          <h3 className="text-xs font-mono font-bold text-textMuted mb-3 tracking-widest">MARQUE</h3>
           <div className="space-y-2 font-mono text-xs">
             {['BMW', 'Honda', 'Lamborghini', 'Porsche', 'Tesla'].map(make => (
               <label key={make} className="flex items-center gap-3 cursor-pointer group">
@@ -80,8 +84,8 @@ export default function FilterSidebar() {
 
         <div className="pt-4 border-t border-surfaceBorder">
           <h3 className="text-xs font-mono font-bold text-textMuted mb-3 tracking-widest flex justify-between">
-            <span>MAX VALUATION</span>
-            <span className="text-primary">MAD {Number(maxPrice).toLocaleString('en-US')}</span>
+            <span>PRIX MAXIMUM</span>
+            <span className="text-primary">{Number(maxPrice).toLocaleString('fr-FR')} MAD</span>
           </h3>
           <input 
             type="range" 
@@ -98,7 +102,7 @@ export default function FilterSidebar() {
           onClick={applyFilters}
           className="w-full mt-4 py-2 bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 rounded-lg text-xs font-mono font-bold transition"
         >
-          APPLY FILTERS
+          APPLIQUER LES FILTRES
         </button>
       </div>
     </aside>

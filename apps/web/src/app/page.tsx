@@ -22,7 +22,7 @@ export default function HomePage() {
             transition={{ duration: 0.5 }}
             className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-xs font-bold tracking-widest mb-6"
           >
-            TERMINAL 04 ONLINE
+            MARKETPLACE ONLINE
           </motion.span>
           
           <motion.h1 
@@ -31,7 +31,7 @@ export default function HomePage() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="text-5xl sm:text-7xl font-black text-text font-grotesk tracking-tighter leading-tight mb-6 drop-shadow-2xl"
           >
-            ENTER THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primaryLight">GRID</span>
+            COLLECTION AUTOMOBILE <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primaryLight">PREMIUM</span>
           </motion.h1>
           
           <motion.p 
@@ -40,8 +40,7 @@ export default function HomePage() {
             transition={{ duration: 0.7, delay: 0.4 }}
             className="text-textMuted text-lg sm:text-xl font-mono max-w-2xl mb-12 leading-relaxed drop-shadow-md"
           >
-            Acquire premium automotive assets through a decentralized, high-fidelity commerce terminal. 
-            Direct bare-metal database access with zero latency.
+            Trouvez la voiture de vos rêves parmi notre sélection exclusive de véhicules premium au Maroc. Achat sécurisé, accompagnement sur-mesure et livraison directe chez vous.
           </motion.p>
 
           <motion.div
@@ -53,7 +52,7 @@ export default function HomePage() {
               <span className="absolute inset-0 animate-laser-spin bg-conic-laser opacity-75 group-hover:opacity-100 transition" />
               <span className="relative flex w-full items-center justify-center gap-3 rounded-[11px] bg-slate-900/90 px-8 py-5 backdrop-blur-xl transition group-hover:bg-slate-900/70">
                 <span className="h-2 w-2 rounded-full bg-primary animate-ping" />
-                <span>ACCESS FLEET</span>
+                <span>VOIR LA COLLECTION</span>
               </span>
             </Link>
           </motion.div>
@@ -72,19 +71,19 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-surfaceBorder/50">
             <div className="text-center px-4">
               <div className="text-3xl font-black font-grotesk text-text mb-1">04</div>
-              <div className="text-[10px] font-mono text-textDim tracking-widest uppercase">Global Sectors</div>
+              <div className="text-[10px] font-mono text-textDim tracking-widest uppercase">Villes Desservies</div>
             </div>
             <div className="text-center px-4">
-              <div className="text-3xl font-black font-grotesk text-text mb-1">&lt; 1ms</div>
-              <div className="text-[10px] font-mono text-textDim tracking-widest uppercase">Query Latency</div>
+              <div className="text-3xl font-black font-grotesk text-text mb-1">24/48h</div>
+              <div className="text-[10px] font-mono text-textDim tracking-widest uppercase">Livraison Rapide</div>
             </div>
             <div className="text-center px-4">
               <div className="text-3xl font-black font-grotesk text-primary mb-1">100%</div>
-              <div className="text-[10px] font-mono text-textDim tracking-widest uppercase">Mutex Integrity</div>
+              <div className="text-[10px] font-mono text-textDim tracking-widest uppercase">Transactions Sécurisées</div>
             </div>
             <div className="text-center px-4">
               <div className="text-3xl font-black font-grotesk text-text mb-1">24/7</div>
-              <div className="text-[10px] font-mono text-textDim tracking-widest uppercase">System Uptime</div>
+              <div className="text-[10px] font-mono text-textDim tracking-widest uppercase">Service Client</div>
             </div>
           </div>
         </div>

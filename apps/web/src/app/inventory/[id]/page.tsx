@@ -39,92 +39,63 @@ export default async function VehicleDetailPage({ params }: Props) {
             ═══════════════════════════════════════════ */}
         <div className="lg:col-span-7 glass-panel overflow-hidden">
 
-          {/* Image Container with Reticle System */}
-          <div className="relative aspect-video bg-slate-950 overflow-hidden">
+          {/* Image Container */}
+          <div className="relative aspect-video bg-slate-950/30 overflow-hidden flex items-center justify-center">
             {/* Dark Studio Floor Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent z-10 pointer-events-none" />
 
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={finalImageUrl}
               alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-cover"
             />
-
-            {/* Scanline Overlay */}
-            <div className="scanline-overlay z-20" />
-
-            {/* SVG Tracking Reticle */}
-            <div className="reticle-container z-20" style={{ animation: 'reticle-pulse 4s ease-in-out infinite' }}>
-              <div className="reticle-bracket top-left" />
-              <div className="reticle-bracket top-right" />
-              <div className="reticle-bracket bottom-left" />
-              <div className="reticle-bracket bottom-right" />
-              <div className="reticle-crosshair" />
-            </div>
-
-            {/* Reticle Telemetry Labels */}
-            <div className="absolute top-4 left-4 z-20 font-mono text-[10px] text-primary/80 leading-relaxed">
-              <div>MODEL: {vehicle.make} {vehicle.model} [{vehicle.year}]</div>
-              <div>VIN: {vehicle.vin}</div>
-            </div>
-            <div className="absolute top-4 right-4 z-20 font-mono text-[10px] text-primary/80 leading-relaxed text-right">
-              <div>SCANNING...</div>
-              <div>STATUS: <span className="text-emerald-400">OPTIMAL</span></div>
-            </div>
-          </div>
-
-          {/* Telemetry Footer Bar */}
-          <div className="px-5 py-3 bg-surface/80 border-t border-surfaceBorder flex justify-between items-center font-mono text-[10px] text-textDim">
-            <span>REGISTRY ID: <span className="text-textMuted">{vehicle.id}</span></span>
-            <span>LOC: <span className="text-textMuted">{vehicle.dealershipLocationId.slice(0, 8)}...</span></span>
           </div>
         </div>
 
         {/* ═══════════════════════════════════════════
             RIGHT: COMMERCE UNIT
             ═══════════════════════════════════════════ */}
-        <div className="lg:col-span-5 glass-panel-elevated hex-pattern flex flex-col justify-between h-full p-6">
+        <div className="lg:col-span-5 glass-panel-elevated flex flex-col justify-between h-full p-8">
 
-          {/* Status & VIN Header */}
+          {/* Status Header */}
           <div>
-            <div className="flex justify-between items-center">
-              <span className={`px-3 py-1 rounded text-[10px] font-mono font-bold ${
+            <div className="flex justify-between items-center mb-6">
+              <span className={`px-4 py-1.5 rounded-full text-xs font-mono font-bold ${
                 vehicle.status === 'AVAILABLE'
                   ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25'
                   : 'bg-amber-500/15 text-amber-400 border border-amber-500/25'
               }`}>
-                {vehicle.status}
+                {vehicle.status === 'AVAILABLE' ? 'DISPONIBLE' : vehicle.status === 'PENDING_RESERVATION' ? 'EN RÉSERVATION' : 'VENDU'}
               </span>
-              <span className="font-mono text-[10px] text-textDim">{vehicle.vin}</span>
             </div>
 
             {/* Vehicle Name */}
-            <h1 className="text-2xl font-bold text-text font-grotesk mt-4 tracking-tight">
-              {vehicle.year} {vehicle.make} {vehicle.model}
+            <h1 className="text-3xl font-bold text-text font-grotesk tracking-tight">
+              {vehicle.make} {vehicle.model}
             </h1>
-            <p className="text-textMuted text-xs mt-1 capitalize font-mono">
-              {vehicle.trim ? `${vehicle.trim} • ` : ''}{vehicle.exteriorColor}
+            <p className="text-textMuted text-sm mt-2 capitalize font-mono">
+              {vehicle.year} • {vehicle.trim ? `${vehicle.trim} • ` : ''}{vehicle.exteriorColor}
             </p>
 
             {/* Specification Grid */}
-            <div className="my-6 pt-5 border-t border-surfaceBorder grid grid-cols-2 gap-4">
+            <div className="my-8 pt-6 border-t border-surfaceBorder grid grid-cols-2 gap-6">
               <div>
-                <span className="block text-[10px] font-mono text-textDim tracking-widest uppercase">ODOMETER</span>
-                <span className="text-base font-bold text-text font-grotesk">{vehicle.mileage.toLocaleString('en-US')} km</span>
+                <span className="block text-xs font-mono text-textDim tracking-widest uppercase mb-1">KILOMÉTRAGE</span>
+                <span className="text-lg font-bold text-text font-grotesk">{vehicle.mileage.toLocaleString('fr-FR')} km</span>
               </div>
               <div>
-                <span className="block text-[10px] font-mono text-textDim tracking-widest uppercase">SLA HOLD</span>
-                <span className="text-base font-bold text-text font-grotesk">48 Hours</span>
+                <span className="block text-xs font-mono text-textDim tracking-widest uppercase mb-1">DÉLAI DE RÉSERVATION</span>
+                <span className="text-lg font-bold text-text font-grotesk">48 Heures</span>
               </div>
             </div>
           </div>
 
           {/* Valuation & CTA Zone */}
-          <div className="pt-5 border-t border-surfaceBorder">
-            <span className="block text-[10px] font-mono text-textDim tracking-widest uppercase">TOTAL UNIT VALUATION</span>
-            <div className="text-3xl font-black text-primary font-grotesk mt-1 mb-6 tracking-tight">
-              MAD {Number(vehicle.price).toLocaleString('en-US')}
+          <div className="pt-6 border-t border-surfaceBorder">
+            <span className="block text-xs font-mono text-textDim tracking-widest uppercase mb-2">PRIX TOTAL</span>
+            <div className="text-4xl font-black text-primary font-grotesk mt-1 mb-8 tracking-tight">
+              {Number(vehicle.price).toLocaleString('fr-FR')} MAD
             </div>
 
             {vehicle.status === 'AVAILABLE' ? (
@@ -136,8 +107,8 @@ export default async function VehicleDetailPage({ params }: Props) {
                 depositAmount={depositRequired}
               />
             ) : (
-              <div className="w-full py-4 glass-panel text-textDim font-mono text-center text-xs border-amber-500/20">
-                [UNIT CURRENTLY LOCKED BY ACTIVE SLA]
+              <div className="w-full py-4 glass-panel text-textDim font-mono text-center text-sm border-amber-500/20">
+                [CE VÉHICULE N'EST PLUS DISPONIBLE]
               </div>
             )}
           </div>

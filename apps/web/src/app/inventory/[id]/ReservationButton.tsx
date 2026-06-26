@@ -204,10 +204,10 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
     return (
       <div className="flex flex-col gap-3">
         {/* Ratified Status Badge */}
-        <div className="flex items-center justify-center gap-2 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+        <div className="flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-[10px] font-mono font-bold text-emerald-400 tracking-widest">
-            CENTRAL BANK CLEARANCE RATIFIED
+          <span className="text-xs font-mono font-bold text-emerald-400 tracking-widest uppercase">
+            RÉSERVATION CONFIRMÉE
           </span>
         </div>
 
@@ -216,12 +216,12 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
           onClick={downloadProformaPDF}
           className="relative group w-full overflow-hidden rounded-xl bg-slate-950 p-px font-mono text-xs font-bold text-emerald-400 shadow-emerald-glow active:scale-[0.99] transition"
         >
-          <span className="absolute inset-0 animate-laser-spin bg-conic-laser-emerald opacity-75 group-hover:opacity-100 transition" />
+          <span className="absolute inset-0 bg-emerald-400/20 opacity-75 group-hover:opacity-100 transition" />
           <span className="relative flex w-full items-center justify-center gap-3 rounded-[11px] bg-slate-900/90 px-6 py-4 backdrop-blur-xl transition group-hover:bg-slate-900/70">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
             </svg>
-            <span>DOWNLOAD PROFORMA VOUCHER (PDF)</span>
+            <span className="text-sm">TÉLÉCHARGER LE REÇU (PDF)</span>
           </span>
         </button>
       </div>
@@ -238,14 +238,14 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
           disabled
           className="relative w-full overflow-hidden rounded-xl bg-slate-950 p-px font-mono text-xs font-bold text-amber-400 cursor-wait"
         >
-          <span className="absolute inset-0 animate-laser-spin bg-conic-laser-amber opacity-60 transition" />
+          <span className="absolute inset-0 bg-amber-400/20 opacity-60 transition" />
           <span className="relative flex w-full items-center justify-center gap-3 rounded-[11px] bg-slate-900/90 px-6 py-4 backdrop-blur-xl">
             <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping" />
-            <span className="animate-pulse">NEGOTIATING INTERBANK RAILS...</span>
+            <span className="animate-pulse text-sm">CONNEXION BANCAIRE EN COURS...</span>
           </span>
         </button>
-        <div className="text-amber-400/70 font-mono text-[10px] text-center p-2 rounded-lg bg-amber-500/5 border border-amber-500/15">
-          Establishing encrypted tunnel to Central Clearing House. Do not close this window.
+        <div className="text-amber-400/80 font-mono text-xs text-center p-3 rounded-lg bg-amber-500/5 border border-amber-500/15">
+          Traitement sécurisé de votre réservation. Veuillez ne pas fermer cette fenêtre.
         </div>
       </div>
     );
@@ -265,12 +265,10 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
             : 'text-primary shadow-cyan-glow'
         }`}
       >
-        {/* The Spinning Cybernetic Laser Perimeter */}
         {!isProcessing && (
-          <span className="absolute inset-0 animate-laser-spin bg-conic-laser opacity-75 group-hover:opacity-100 transition" />
+          <span className="absolute inset-0 bg-primary/20 opacity-75 group-hover:opacity-100 transition" />
         )}
 
-        {/* The Frosted Carbon Inner Core */}
         <span className={`relative flex w-full items-center justify-center gap-3 rounded-[11px] px-6 py-4 backdrop-blur-xl transition ${
           isProcessing
             ? 'bg-slate-800/90'
@@ -279,19 +277,19 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
           {isProcessing ? (
             <>
               <span className="h-2 w-2 rounded-full bg-textMuted animate-pulse" />
-              <span className="animate-pulse">WRITING MUTEX...</span>
+              <span className="animate-pulse text-sm">TRAITEMENT...</span>
             </>
           ) : (
             <>
               <span className="h-2 w-2 rounded-full bg-primary animate-ping" />
-              <span>AUTHORIZE 10% HOLD [ MAD {depositAmount.toLocaleString('en-US')} ]</span>
+              <span className="text-sm">RÉSERVER (ACOMPTE 10%) - {depositAmount.toLocaleString('fr-FR')} MAD</span>
             </>
           )}
         </span>
       </button>
 
       {errorMessage && (
-        <div className="text-error font-mono text-[10px] text-center p-2 rounded-lg bg-error/5 border border-error/15">
+        <div className="text-error font-mono text-xs text-center p-3 rounded-lg bg-error/5 border border-error/15">
           {errorMessage}
         </div>
       )}

@@ -4,6 +4,7 @@ import { fetchCatalog, resolveImageUrl } from '@carshop/api-client';
 import Link from 'next/link';
 import FilterSidebar from './FilterSidebar';
 import VehicleGridClient from './VehicleGridClient';
+import GhostNotification from '../../components/GhostNotification';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,20 +39,21 @@ export default async function CollectionPage({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <GhostNotification />
       
       {/* ═══ SECTION HEADER ═══ */}
       <div className="mb-8 flex justify-between items-end border-b border-surfaceBorder pb-5">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-text font-grotesk uppercase">
-            Asset Collection
+            Collection de Véhicules
           </h1>
           <p className="text-textMuted font-mono text-xs mt-1 uppercase tracking-widest">
-            {displayInventory.length} units matching criteria
+            {displayInventory.length} véhicules correspondent aux critères
           </p>
         </div>
         <span className="flex items-center gap-2 text-xs font-mono font-semibold px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          DATABASE SYNCED
+          INVENTAIRE EN TEMPS RÉEL
         </span>
       </div>
 
