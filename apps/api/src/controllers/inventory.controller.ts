@@ -61,27 +61,4 @@ export const reserveVehicle = async (req: Request, res: Response) => {
   }
 };
 
-import { CreateVehicleSchema } from '@carshop/schema';
 
-export const ingestVehicle = async (req: Request, res: Response) => {
-  try {
-    const data = CreateVehicleSchema.parse(req.body);
-    
-    let imageUrl = null;
-    if (req.file) {
-      // The file was saved to apps/api/uploads
-      imageUrl = `/uploads/${req.file.filename}`;
-    }
-
-    const newVehicle = await prisma.vehicleInventory.create({
-      data: {
-        ...data,
-        imageUrl,
-      }
-    });
-
-    return res.status(201).json({ success: true, vehicle: newVehicle });
-  } catch (error: any) {
-    return res.status(400).json({ error: error.errors || error.message });
-  }
-};

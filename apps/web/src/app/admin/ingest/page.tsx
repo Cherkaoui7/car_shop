@@ -36,9 +36,9 @@ export default function AdminIngestPage() {
       });
 
       // Append file
-      const fileInput = event?.target.elements.photo as HTMLInputElement;
+      const fileInput = event?.target.elements.image as HTMLInputElement;
       if (fileInput?.files?.[0]) {
-        formData.append('photo', fileInput.files[0]);
+        formData.append('image', fileInput.files[0]);
       }
 
       // Hardcode a dummy admin token for local testing to bypass auth wall
@@ -121,7 +121,7 @@ export default function AdminIngestPage() {
 
           <div className="col-span-2">
             <label className="block text-sm font-medium text-gray-700">Vehicle Photo</label>
-            <input type="file" name="photo" accept="image/*" className="mt-1 block w-full" />
+            <input type="file" name="image" accept="image/*" className="mt-1 block w-full" />
           </div>
         </div>
 

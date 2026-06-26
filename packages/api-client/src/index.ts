@@ -16,7 +16,7 @@ export const fetchCatalog = async (filters?: any): Promise<VehicleDTO[]> => {
 };
 
 export const ingestVehicle = async (formData: FormData, token: string): Promise<VehicleDTO> => {
-  const response = await apiClient.post('/inventory/ingest', formData, {
+  const response = await apiClient.post('/admin/ingest', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
       'Authorization': `Bearer ${token}`
