@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import ReservationButton from './ReservationButton';
 
+export const dynamic = 'force-dynamic';
+
 interface Props {
   params: { id: string };
 }

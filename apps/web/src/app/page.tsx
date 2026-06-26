@@ -1,6 +1,8 @@
 import { fetchCatalog } from '@carshop/api-client';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const inventory = await fetchCatalog().catch(() => []);
 
