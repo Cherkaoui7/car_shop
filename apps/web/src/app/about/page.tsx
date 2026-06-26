@@ -1,9 +1,16 @@
 // apps/web/src/app/about/page.tsx
 // PROJECT OBSIDIAN — About Page
 
+import CyberRain from '../../components/CyberRain';
+
 export default function AboutPage() {
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div className="flex flex-col relative min-h-screen">
+      {/* ═══ GLOBAL PAGE BACKGROUNDS ═══ */}
+      <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/15 via-background to-background" />
+      <CyberRain />
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
       <div className="mb-16 text-center">
         <span className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary font-mono text-xs font-bold tracking-widest mb-6 inline-block">
           NOTRE HISTOIRE
@@ -90,6 +97,7 @@ export default function AboutPage() {
           </div>
         </div>
 
+      </div>
       </div>
     </div>
   );
