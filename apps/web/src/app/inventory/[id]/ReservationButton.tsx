@@ -216,7 +216,7 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
           onClick={downloadProformaPDF}
           className="relative group w-full overflow-hidden rounded-xl bg-slate-950 p-px font-mono text-xs font-bold text-emerald-400 shadow-emerald-glow active:scale-[0.99] transition"
         >
-          <span className="absolute inset-0 bg-emerald-400/20 opacity-75 group-hover:opacity-100 transition" />
+          <span className="absolute inset-0 animate-laser-spin bg-conic-laser-emerald opacity-75 group-hover:opacity-100 transition" />
           <span className="relative flex w-full items-center justify-center gap-3 rounded-[11px] bg-slate-900/90 px-6 py-4 backdrop-blur-xl transition group-hover:bg-slate-900/70">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -238,13 +238,13 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
           disabled
           className="relative w-full overflow-hidden rounded-xl bg-slate-950 p-px font-mono text-xs font-bold text-amber-400 cursor-wait"
         >
-          <span className="absolute inset-0 bg-amber-400/20 opacity-60 transition" />
+          <span className="absolute inset-0 animate-laser-spin bg-conic-laser-amber opacity-60 transition" />
           <span className="relative flex w-full items-center justify-center gap-3 rounded-[11px] bg-slate-900/90 px-6 py-4 backdrop-blur-xl">
             <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping" />
             <span className="animate-pulse text-sm">CONNEXION BANCAIRE EN COURS...</span>
           </span>
         </button>
-        <div className="text-amber-400/80 font-mono text-xs text-center p-3 rounded-lg bg-amber-500/5 border border-amber-500/15">
+        <div className="text-amber-400/80 font-mono text-[10px] text-center p-3 rounded-lg bg-amber-500/5 border border-amber-500/15">
           Traitement sécurisé de votre réservation. Veuillez ne pas fermer cette fenêtre.
         </div>
       </div>
@@ -265,8 +265,9 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
             : 'text-primary shadow-cyan-glow'
         }`}
       >
+        {/* The Spinning Cybernetic Laser Perimeter */}
         {!isProcessing && (
-          <span className="absolute inset-0 bg-primary/20 opacity-75 group-hover:opacity-100 transition" />
+          <span className="absolute inset-0 animate-laser-spin bg-conic-laser opacity-75 group-hover:opacity-100 transition" />
         )}
 
         <span className={`relative flex w-full items-center justify-center gap-3 rounded-[11px] px-6 py-4 backdrop-blur-xl transition ${

@@ -39,24 +39,52 @@ export default async function VehicleDetailPage({ params }: Props) {
             ═══════════════════════════════════════════ */}
         <div className="lg:col-span-7 glass-panel overflow-hidden">
 
-          {/* Image Container */}
-          <div className="relative aspect-video bg-slate-950/30 overflow-hidden flex items-center justify-center">
+          {/* Image Container with Reticle System */}
+          <div className="relative aspect-video bg-slate-950 overflow-hidden">
             {/* Dark Studio Floor Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10 pointer-events-none" />
 
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={finalImageUrl}
               alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
+
+            {/* Scanline Overlay */}
+            <div className="scanline-overlay z-20" />
+
+            {/* SVG Tracking Reticle */}
+            <div className="reticle-container z-20" style={{ animation: 'reticle-pulse 4s ease-in-out infinite' }}>
+              <div className="reticle-bracket top-left" />
+              <div className="reticle-bracket top-right" />
+              <div className="reticle-bracket bottom-left" />
+              <div className="reticle-bracket bottom-right" />
+              <div className="reticle-crosshair" />
+            </div>
+
+            {/* Reticle Telemetry Labels */}
+            <div className="absolute top-4 left-4 z-20 font-mono text-[10px] text-primary/80 leading-relaxed">
+              <div>MODEL: {vehicle.make} {vehicle.model} [{vehicle.year}]</div>
+              <div>VIN: {vehicle.vin}</div>
+            </div>
+            <div className="absolute top-4 right-4 z-20 font-mono text-[10px] text-primary/80 leading-relaxed text-right">
+              <div>SCANNING...</div>
+              <div>STATUS: <span className="text-emerald-400">OPTIMAL</span></div>
+            </div>
+          </div>
+
+          {/* Telemetry Footer Bar */}
+          <div className="px-5 py-3 bg-surface/80 border-t border-surfaceBorder flex justify-between items-center font-mono text-[10px] text-textDim">
+            <span>REGISTRY ID: <span className="text-textMuted">{vehicle.id}</span></span>
+            <span>LOC: <span className="text-textMuted">{vehicle.dealershipLocationId.slice(0, 8)}...</span></span>
           </div>
         </div>
 
         {/* ═══════════════════════════════════════════
             RIGHT: COMMERCE UNIT
             ═══════════════════════════════════════════ */}
-        <div className="lg:col-span-5 glass-panel-elevated flex flex-col justify-between h-full p-8">
+        <div className="lg:col-span-5 glass-panel-elevated hex-pattern flex flex-col justify-between h-full p-8">
 
           {/* Status Header */}
           <div>

@@ -35,7 +35,7 @@ export default function VehicleGridClient({ inventory }: { inventory: any[] }) {
       className="flex-1 grid grid-cols-1 gap-5 sm:grid-cols-2"
     >
       {inventory.map((vehicle: any) => {
-        const imageUrl = vehicle.resolvedImageUrl;
+        const imageUrl = vehicle.resolvedImageUrl || vehicle.imageUrl;
         const isAvailable = vehicle.status === 'AVAILABLE';
 
         return (
@@ -43,18 +43,28 @@ export default function VehicleGridClient({ inventory }: { inventory: any[] }) {
             <Link href={`/inventory/${vehicle.id}`} className="block group h-full">
               <div className="glass-panel overflow-hidden flex flex-col justify-between group-hover:border-primary/40 group-hover:shadow-cyan-glow transition-all duration-300 h-full">
 
-                {/* Vehicle Image */}
-                <div className="relative aspect-video bg-slate-950/50 overflow-hidden">
+                {/* Vehicle Image with Reticle */}
+                <div className="relative aspect-video bg-slate-950 overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={imageUrl}
                     alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-500"
+                    className="w-full h-full object-contain opacity-90 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-500"
                   />
+                  <div className="scanline-overlay" />
+
+                  {/* Reticle Brackets */}
+                  <div className="reticle-container opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="reticle-bracket top-left" />
+                    <div className="reticle-bracket top-right" />
+                    <div className="reticle-bracket bottom-left" />
+                    <div className="reticle-bracket bottom-right" />
+                    <div className="reticle-crosshair" />
+                  </div>
 
                   {/* Status Badge Overlay */}
                   <div className="absolute top-3 right-3">
-                    <span className={`text-[10px] font-mono font-bold px-3 py-1.5 rounded-full backdrop-blur-md ${
+                    <span className={`text-[10px] font-mono font-bold px-2 py-1 rounded ${
                       isAvailable
                         ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                         : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
@@ -66,6 +76,11 @@ export default function VehicleGridClient({ inventory }: { inventory: any[] }) {
 
                 {/* Vehicle Info */}
                 <div className="p-5">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] font-mono text-primary/60 bg-primary/5 px-2 py-0.5 rounded">
+                      {vehicle.vin}
+                    </span>
+                  </div>
                   <h2 className="text-xl font-bold text-text font-grotesk group-hover:text-primary transition">
                     {vehicle.make} {vehicle.model}
                   </h2>
