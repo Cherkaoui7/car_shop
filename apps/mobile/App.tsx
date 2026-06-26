@@ -6,8 +6,8 @@ import { colors } from '@carshop/design-tokens';
 import { VehicleDTO } from '@carshop/schema';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 
-// Use the computer's actual local IP address for physical devices on Wi-Fi
-const NATIVE_API_URL = 'http://192.168.1.7:5000/api/v1';
+// Use the EXPO_PUBLIC_API_URL from .env or fallback to the correct physical IP
+const NATIVE_API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.4:5000/api/v1';
 apiClient.defaults.baseURL = NATIVE_API_URL;
 
 export default function App() {

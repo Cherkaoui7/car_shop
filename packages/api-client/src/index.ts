@@ -2,8 +2,8 @@
 import axios from 'axios';
 import { VehicleDTO } from '@carshop/schema';
 
-// Fallback to local network IP so physical phones and browsers share the exact same Gateway
-const LOCAL_GATEWAY = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+// Fallback to EXPO_PUBLIC_API_URL for mobile, NEXT_PUBLIC_API_URL for web, or 10.0.2.2 for Android emulators
+const LOCAL_GATEWAY = process.env.NEXT_PUBLIC_API_URL || process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:5000/api/v1';
 
 export const apiClient = axios.create({
   baseURL: LOCAL_GATEWAY,
