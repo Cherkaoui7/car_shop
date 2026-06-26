@@ -1,8 +1,8 @@
 // apps/web/src/app/inventory/[id]/ReservationButton.tsx
 'use client';
 
-import React, { useState } from 'react';
-import { reserveVehicle } from '@carshop/api-client';
+import React, { useState, useEffect } from 'react';
+import { reserveVehicle, probeOrderState } from '@carshop/api-client';
 import { useRouter } from 'next/navigation';
 import jsPDF from 'jspdf';
 
@@ -17,25 +17,55 @@ interface Props {
 export default function ReservationButton({ vehicleId, vehicleName, vin, userId, depositAmount }: Props) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [securedOrder, setSecuredOrder] = useState<any | null>(null);
+
+  // State Machine Tracking
+  const [activeIntent, setActiveIntent] = useState<string | null>(null);
+  const [ratifiedOrder, setRatifiedOrder] = useState<any | null>(null);
   const router = useRouter();
+
+  // THE SENTINEL LOOP
+  useEffect(() => {
+    if (!activeIntent || ratifiedOrder) return;
+
+    const sentinelInterval = setInterval(async () => {
+      try {
+        const liveState = await probeOrderState(activeIntent);
+
+        if (liveState.status === 'DEPOSIT_SECURED') {
+          setRatifiedOrder(liveState);
+          setActiveIntent(null);
+          clearInterval(sentinelInterval);
+          router.refresh(); // Locks the background server layout
+        }
+      } catch (e) {
+        // Silently absorb transient dev-network dropped packets
+      }
+    }, 1500); // 1.5s telemetry sweep
+
+    // Failsafe: Kill sentinel after 30s to prevent infinite RAM polling
+    const killSwitch = setTimeout(() => {
+      clearInterval(sentinelInterval);
+      if (!ratifiedOrder) {
+        setActiveIntent(null);
+        setErrorMessage("GATEWAY_TIMEOUT: Interbank settlement exceeded 30s SLA.");
+      }
+    }, 30000);
+
+    return () => {
+      clearInterval(sentinelInterval);
+      clearTimeout(killSwitch);
+    };
+  }, [activeIntent, ratifiedOrder, router]);
 
   const handleHoldAuthorization = async () => {
     setIsProcessing(true);
     setErrorMessage(null);
 
     try {
-      const response = await reserveVehicle({
-        vehicleId,
-        userId,
-        depositAmount
-      });
-
+      const response = await reserveVehicle({ vehicleId, userId, depositAmount });
       if (response.success) {
-        setSecuredOrder(response.order);
-        // Removed router.refresh() because it causes the server to re-render the page
-        // with status="PENDING_RESERVATION", which immediately unmounts this component
-        // and hides the PDF download button!
+        // Arm the Sentinel; do not grant green status yet!
+        setActiveIntent(response.order.intentToken);
       }
     } catch (error: any) {
       const errorMsg = error.response?.data?.error || "TRANSACTION_CONCURRENCY_VIOLATION";
@@ -49,7 +79,7 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
   };
 
   const downloadProformaPDF = () => {
-    if (!securedOrder) return;
+    if (!ratifiedOrder) return;
     const doc = new jsPDF();
 
     // Helper to safely format numbers for jsPDF without Intl thin-space encoding issues
@@ -101,7 +131,7 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
     doc.text("Ledger Ref No:", 20, startY);
     doc.setTextColor(15, 23, 42);
     doc.setFont("helvetica", "bold");
-    doc.text(securedOrder.orderNumber, 65, startY);
+    doc.text(ratifiedOrder.orderNumber, 65, startY);
     
     doc.setFont("helvetica", "normal");
     doc.setTextColor(71, 85, 105);
@@ -134,7 +164,7 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
     
     doc.setTextColor(16, 185, 129); // emerald-500
     doc.setFont("helvetica", "bold");
-    doc.text(`MAD ${formatCurrency(Number(securedOrder.depositAmount))}`, 130, 130);
+    doc.text(`MAD ${formatCurrency(Number(ratifiedOrder.depositAmount))}`, 130, 130);
 
     doc.setTextColor(71, 85, 105);
     doc.setFont("helvetica", "normal");
@@ -142,10 +172,10 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
     
     doc.setTextColor(15, 23, 42);
     doc.setFont("helvetica", "bold");
-    doc.text(`MAD ${formatCurrency(Number(securedOrder.finalPrice))}`, 130, 145);
+    doc.text(`MAD ${formatCurrency(Number(ratifiedOrder.finalPrice))}`, 130, 145);
 
     // SLA Details
-    const slaDate = new Date(securedOrder.expiresAt).toLocaleString('en-US', {
+    const slaDate = new Date(ratifiedOrder.expiresAt).toLocaleString('en-US', {
       dateStyle: 'medium',
       timeStyle: 'short'
     });
@@ -161,14 +191,15 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
     doc.setTextColor(100, 116, 139);
     doc.text("LEGAL NOTICE: Unit locked in PostgreSQL database for 48 hours awaiting wire funds.", 20, 185);
 
-    doc.save(`AURORA_${securedOrder.orderNumber}_VOUCHER.pdf`);
+    doc.save(`AURORA_${ratifiedOrder.orderNumber}_VOUCHER.pdf`);
   };
 
-  if (securedOrder) {
+  // RENDER STAGE 4: RATIFIED
+  if (ratifiedOrder) {
     return (
       <div className="flex flex-col gap-2 items-center p-4 bg-emerald-50 rounded-xl border border-emerald-200">
         <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-emerald-200 text-emerald-900">
-          TRANSACTION RATIFIED
+          CENTRAL BANK CLEARANCE RATIFIED
         </span>
         <button
           onClick={downloadProformaPDF}
@@ -180,6 +211,24 @@ export default function ReservationButton({ vehicleId, vehicleName, vin, userId,
     );
   }
 
+  // RENDER STAGE 3: THE SENTINEL (AMBER)
+  if (activeIntent) {
+    return (
+      <div className="flex flex-col gap-2">
+        <button
+          disabled
+          className="w-full py-4 text-white font-bold rounded-xl shadow-lg flex justify-center items-center gap-2 bg-amber-500 cursor-wait shadow-amber-500/20"
+        >
+          <span className="font-mono text-sm animate-pulse">NEGOTIATING INTERBANK RAILS...</span>
+        </button>
+        <div className="text-amber-600 font-mono text-xs mt-2 text-center p-2 bg-amber-50 border border-amber-200 rounded">
+          Establishing encrypted tunnel to Central Clearing House. Do not close this window.
+        </div>
+      </div>
+    );
+  }
+
+  // RENDER STAGE 1 & 2: IDLE & HANDSHAKE
   return (
     <div className="flex flex-col gap-2">
       <button

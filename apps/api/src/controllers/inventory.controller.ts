@@ -40,11 +40,15 @@ export const reserveVehicle = async (req: Request, res: Response) => {
         throw new Error("VEHICLE_UNAVAILABLE_FOR_RESERVATION");
       }
 
-      // Optimistic Mutex Lock
-      await tx.vehicleInventory.update({
-        where: { id: vehicleId },
+      // Optimistic Mutex Lock - Atomic Update
+      const updateResult = await tx.vehicleInventory.updateMany({
+        where: { id: vehicleId, status: 'AVAILABLE' },
         data: { status: 'PENDING_RESERVATION' }
       });
+
+      if (updateResult.count === 0) {
+        throw new Error("VEHICLE_UNAVAILABLE_FOR_RESERVATION");
+      }
 
       return await tx.reservationOrder.create({
         data: {
@@ -96,6 +100,29 @@ export const getVehicleByVin = async (req: Request, res: Response) => {
     if (!vehicle) return res.status(404).json({ error: "OPTICAL_VIN_NOT_REGISTERED" });
 
     return res.status(200).json({ success: true, data: vehicle });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+export const probeOrderStatus = async (req: Request, res: Response) => {
+  try {
+    const { intentToken } = req.params;
+
+    const order = await prisma.reservationOrder.findUnique({
+      where: { intentToken },
+      select: {
+        status: true,
+        orderNumber: true,
+        depositAmount: true,
+        finalPrice: true,
+        expiresAt: true
+      }
+    });
+
+    if (!order) return res.status(404).json({ error: "UNINDEXED_INTENT_TOKEN" });
+
+    return res.status(200).json({ success: true, data: order });
   } catch (error: any) {
     return res.status(400).json({ error: error.message });
   }

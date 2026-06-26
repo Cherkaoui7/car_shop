@@ -1,0 +1,18 @@
+config:
+  target: "http://localhost:5000"
+  phases:
+    - duration: 5
+      arrivalRate: 100
+      name: "Thundering Herd (500 users over 5 seconds)"
+  variables:
+    vehicleId:
+      - "{{ $processEnvironment.TARGET_VEHICLE_ID }}"
+scenarios:
+  - name: "Reserve Vehicle"
+    flow:
+      - post:
+          url: "/api/v1/inventory/reserve"
+          json:
+            vehicleId: "{{ vehicleId }}"
+            userId: "artillery-stress-test-user"
+            depositAmount: 1000

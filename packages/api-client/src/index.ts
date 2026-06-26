@@ -30,6 +30,11 @@ export const ingestVehicle = async (formData: FormData, token: string): Promise<
   return response.data.vehicle;
 };
 
+export const probeOrderState = async (intentToken: string) => {
+  const response = await apiClient.get(`/inventory/probe/${intentToken}`);
+  return response.data.data;
+};
+
 // Extracts the root domain (http://localhost:5000) by stripping the /api/v1 suffix
 export const STATIC_ASSET_BASE = LOCAL_GATEWAY.replace(/\/api\/v1\/?$/, '');
 

@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "tsx src/server.ts"
+    "start": "tsx src/server.ts",
+    "siege": "tsx src/chaos-engine.ts"
   },
   "dependencies": {
     "@carshop/db": "workspace:*",
