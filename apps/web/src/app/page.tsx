@@ -1,4 +1,5 @@
 import { fetchCatalog } from '@carshop/api-client';
+import Link from 'next/link';
 
 export default async function HomePage() {
   const inventory = await fetchCatalog().catch(() => []);
@@ -20,20 +21,22 @@ export default async function HomePage() {
           </div>
         ) : (
           inventory.map((vehicle: any) => (
-            <div key={vehicle.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between">
-              <div className="p-6">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">{vehicle.vin}</span>
-                  <span className="text-xs font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-green-100 text-green-700">{vehicle.status}</span>
+            <Link key={vehicle.id} href={`/inventory/${vehicle.id}`} className="block group">
+              <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between group-hover:border-blue-500 transition h-full">
+                <div className="p-6">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">{vehicle.vin}</span>
+                    <span className="text-xs font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-green-100 text-green-700">{vehicle.status}</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-slate-900 mt-3">{vehicle.year} {vehicle.make} {vehicle.model}</h2>
+                  <p className="text-slate-500 text-sm mt-1 capitalize">{vehicle.exteriorColor} • {vehicle.mileage.toLocaleString()} km</p>
                 </div>
-                <h2 className="text-xl font-bold text-slate-900 mt-3">{vehicle.year} {vehicle.make} {vehicle.model}</h2>
-                <p className="text-slate-500 text-sm mt-1 capitalize">{vehicle.exteriorColor} • {vehicle.mileage.toLocaleString()} km</p>
+                <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-lg font-bold text-slate-900">{Number(vehicle.price).toLocaleString('en-US', { style: 'currency', currency: 'MAD' })}</span>
+                  <button className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm group-hover:bg-blue-800">VIEW</button>
+                </div>
               </div>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-lg font-bold text-slate-900">{Number(vehicle.price).toLocaleString('en-US', { style: 'currency', currency: 'MAD' })}</span>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm">RESERVE</button>
-              </div>
-            </div>
+            </Link>
           ))
         )}
       </div>

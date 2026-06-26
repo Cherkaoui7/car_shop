@@ -61,4 +61,20 @@ export const reserveVehicle = async (req: Request, res: Response) => {
   }
 };
 
+export const getVehicleById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const vehicle = await prisma.vehicleInventory.findUnique({
+      where: { id },
+      include: { location: true }
+    });
+
+    if (!vehicle) return res.status(404).json({ error: "VEHICLE_NOT_FOUND_IN_RELATIONAL_REGISTRY" });
+
+    return res.status(200).json({ success: true, data: vehicle });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
 
