@@ -77,4 +77,18 @@ export const getVehicleById = async (req: Request, res: Response) => {
   }
 };
 
+export const getVehicleByVin = async (req: Request, res: Response) => {
+  try {
+    const { vin } = req.params;
+    const vehicle = await prisma.vehicleInventory.findUnique({
+      where: { vin },
+      include: { location: true }
+    });
 
+    if (!vehicle) return res.status(404).json({ error: "OPTICAL_VIN_NOT_REGISTERED" });
+
+    return res.status(200).json({ success: true, data: vehicle });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+};

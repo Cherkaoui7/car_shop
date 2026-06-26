@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "test": "turbo run test test:e2e",
     "dev": "turbo run dev",
     "start:api": "pnpm --filter @carshop/api start",
     "start:web": "pnpm --filter @carshop/web start",
