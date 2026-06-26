@@ -32,5 +32,5 @@ export const CatalogFilterSchema = z.object({
 });
 
 export type VehicleDTO = z.infer<typeof VehicleSchema>;
-export type CreateVehicleInput = z.infer<typeof CreateVehicleSchema>;
+export type CreateVehicleInput = z.input<typeof CreateVehicleSchema>;
 export type CatalogFilterInput = z.infer<typeof CatalogFilterSchema>;

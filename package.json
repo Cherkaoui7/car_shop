@@ -4,8 +4,8 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "start:api": "node apps/api/dist/server.js",
-    "start:web": "next start apps/web --port 3000",
+    "start:api": "pnpm --filter @carshop/api start",
+    "start:web": "pnpm --filter @carshop/web start",
     "start": "concurrently \"pnpm start:api\" \"pnpm start:web\"",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
