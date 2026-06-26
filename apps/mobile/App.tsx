@@ -7,7 +7,7 @@ import { VehicleDTO } from '@carshop/schema';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 
 // Use the computer's actual local IP address for physical devices on Wi-Fi
-const NATIVE_API_URL = 'http://192.168.1.13:5000/api/v1';
+const NATIVE_API_URL = 'http://192.168.1.7:5000/api/v1';
 apiClient.defaults.baseURL = NATIVE_API_URL;
 
 export default function App() {
@@ -18,8 +18,11 @@ export default function App() {
   const [scanned, setScanned] = useState(false);
 
   useEffect(() => {
-    fetchCatalog()
-      .then((data) => setInventory(data))
+    Promise.all([
+      fetchCatalog({ status: 'AVAILABLE' }),
+      fetchCatalog({ status: 'PENDING_RESERVATION' })
+    ])
+      .then(([available, pending]) => setInventory([...available, ...pending]))
       .catch((err) => console.error("API Gateway unreachable:", err.message))
       .finally(() => setLoading(false));
   }, []);
@@ -58,7 +61,7 @@ export default function App() {
     return (
       <View style={styles.cameraContainer}>
         <CameraView
-          style={StyleSheet.absoluteFillObject}
+          style={StyleSheet.absoluteFill}
           onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
           barcodeScannerSettings={{
             barcodeTypes: ["qr", "code128", "code39", "code93", "ean13", "ean8", "upc_a", "upc_e"],
@@ -141,7 +144,7 @@ const styles = StyleSheet.create({
   reserveButton: { backgroundColor: '#e2e8f0', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8 },
   reserveText: { color: colors.primary, fontWeight: 'bold', fontSize: 12 },
   cameraContainer: { flex: 1, backgroundColor: '#000' },
-  scannerOverlay: { ...StyleSheet.absoluteFillObject, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.4)' },
+  scannerOverlay: { ...StyleSheet.absoluteFill, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.4)' },
   scanTarget: { width: 250, height: 250, borderWidth: 2, borderColor: '#10b981', backgroundColor: 'transparent' },
   cancelButton: { position: 'absolute', bottom: 50, backgroundColor: '#ef4444', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 8 },
   cancelText: { color: 'white', fontWeight: 'bold', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' },
