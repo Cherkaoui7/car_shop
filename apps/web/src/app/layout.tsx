@@ -38,9 +38,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* ═══ NAVIGATION BAR ═══ */}
         <nav className="px-4 sm:px-6 py-3 border-b border-surfaceBorder flex items-center justify-between bg-background/80 backdrop-blur-sm sticky top-[33px] z-40">
           <div className="flex items-center gap-2">
-            <span className="text-primary font-bold text-lg tracking-tight font-grotesk">AURORA</span>
+            <span className="text-primary font-bold text-lg tracking-tight font-grotesk">Car Store</span>
             <span className="text-textDim font-mono text-xs">//</span>
-            <span className="text-textMuted font-mono text-xs">TERMINAL 04</span>
+
           </div>
           <div className="flex items-center gap-1">
             <Link
