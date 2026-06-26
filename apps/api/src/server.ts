@@ -12,6 +12,17 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
+import { handleBankSettlement } from './controllers/webhook.controller';
+
+// =========================================================================
+// CRITICAL BYPASS: Mount Webhook raw parser BEFORE express.json() mounts!
+// =========================================================================
+app.post(
+  '/api/v1/webhooks/bank-settlement',
+  express.raw({ type: 'application/json' }),
+  handleBankSettlement
+);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({

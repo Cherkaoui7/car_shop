@@ -2,6 +2,8 @@
 import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { CatalogFilterSchema } from '@carshop/schema';
+import crypto from 'crypto';
+import { dispatchSyntheticBankClearing } from '../lib/mock-bank';
 
 export const getCatalog = async (req: Request, res: Response) => {
   try {
@@ -28,7 +30,9 @@ export const reserveVehicle = async (req: Request, res: Response) => {
   try {
     const { vehicleId, userId, depositAmount } = req.body;
 
-    // Execute atomic transaction to prevent double-booking race conditions
+    const intentToken = `INTENT-${crypto.randomBytes(16).toString('hex').toUpperCase()}`;
+    const orderNum = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
+
     const order = await prisma.$transaction(async (tx) => {
       const targetVehicle = await tx.vehicleInventory.findUnique({ where: { id: vehicleId } });
 
@@ -36,24 +40,28 @@ export const reserveVehicle = async (req: Request, res: Response) => {
         throw new Error("VEHICLE_UNAVAILABLE_FOR_RESERVATION");
       }
 
-      // Lock vehicle
+      // Optimistic Mutex Lock
       await tx.vehicleInventory.update({
         where: { id: vehicleId },
         data: { status: 'PENDING_RESERVATION' }
       });
 
-      // Issue Order
       return await tx.reservationOrder.create({
         data: {
-          orderNumber: `ORD-${Math.floor(100000 + Math.random() * 900000)}`,
+          orderNumber: orderNum,
           userId,
           vehicleId,
           depositAmount,
           finalPrice: targetVehicle.price,
-          expiresAt: new Date(Date.now() + 48 * 60 * 60 * 1000), // 48 Hour hold
+          intentToken,
+          status: 'PENDING_GATEWAY',
+          expiresAt: new Date(Date.now() + 48 * 60 * 60 * 1000),
         }
       });
     });
+
+    // Unleash the asynchronous clearing house robot
+    dispatchSyntheticBankClearing(intentToken, orderNum);
 
     return res.status(200).json({ success: true, order });
   } catch (error: any) {
