@@ -155,6 +155,39 @@ export default function LoginPage() {
           </div>
         </div>
       </motion.div>
+
+      {/* Success Popup */}
+      <AnimatePresence>
+        {showSuccessPopup && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="bg-slate-900 border border-primary/50 shadow-[0_0_40px_rgba(6,182,212,0.3)] p-8 rounded-2xl max-w-sm w-full text-center relative overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
+              <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_20px_rgba(6,182,212,0.4)]">
+                <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+              </div>
+              <h2 className="text-xl font-bold font-grotesk text-text uppercase mb-2">Accès Autorisé</h2>
+              <p className="text-textMuted font-mono text-sm mb-6">Connexion réussie. Redirection vers le terminal central...</p>
+              <div className="w-full bg-surfaceBorder h-1 rounded-full overflow-hidden">
+                <motion.div 
+                  initial={{ width: 0 }} 
+                  animate={{ width: "100%" }} 
+                  transition={{ duration: 1.8, ease: "linear" }}
+                  className="h-full bg-primary"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
