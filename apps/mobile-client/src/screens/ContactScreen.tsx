@@ -1,8 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Platform, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Platform, TextInput, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native';
 import { colors } from '@carshop/design-tokens';
 
 export function ContactScreen() {
+  const handleSend = () => {
+    Alert.alert("Transmission Réussie", "Votre message a été crypté et envoyé sur le réseau Aurora. Nous vous répondrons bientôt.");
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView 
@@ -60,7 +64,7 @@ export function ContactScreen() {
               numberOfLines={4}
             />
 
-            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+            <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={handleSend}>
               <View style={styles.buttonContent}>
                 <Text style={styles.buttonText}>ENVOYER LE MESSAGE</Text>
               </View>

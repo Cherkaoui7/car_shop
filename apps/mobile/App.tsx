@@ -135,7 +135,11 @@ export default function App() {
     
       <View style={styles.cardFooter}>
         <Text style={styles.price}>MAD {Number(item.price).toLocaleString()}</Text>
-        <TouchableOpacity style={styles.actionButton} activeOpacity={0.8}>
+        <TouchableOpacity 
+          style={styles.actionButton} 
+          activeOpacity={0.8}
+          onPress={() => Alert.alert("Détails du véhicule", `VIN: ${item.vin}\nStatut: ${item.status}\n\nL'inspection complète est disponible sur le terminal principal.`)}
+        >
           <Text style={styles.actionText}>DETAILS</Text>
         </TouchableOpacity>
       </View>
