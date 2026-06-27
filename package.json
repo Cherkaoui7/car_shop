@@ -5,6 +5,8 @@
     "build": "turbo run build",
     "test": "turbo run test test:e2e",
     "dev": "turbo run dev",
+    "dev:client": "pnpm --filter @carshop/mobile-client dev",
+    "dev:admin": "pnpm --filter @carshop/mobile dev",
     "start:api": "pnpm --filter @carshop/api start",
     "start:web": "pnpm --filter @carshop/web start",
     "start": "concurrently \"pnpm start:api\" \"pnpm start:web\"",
