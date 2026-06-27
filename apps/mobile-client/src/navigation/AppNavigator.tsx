@@ -1,17 +1,56 @@
 import React from 'react';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from '../screens/HomeScreen';
 import { DetailsScreen } from '../screens/DetailsScreen';
+import { LandingScreen } from '../screens/LandingScreen';
+import { AboutScreen } from '../screens/AboutScreen';
+import { ContactScreen } from '../screens/ContactScreen';
 import { colors } from '@carshop/design-tokens';
 import { VehicleDTO } from '@carshop/schema';
 
-export type RootStackParamList = {
-  Home: undefined;
+// This is the nested stack for the Collection tab
+export type CollectionStackParamList = {
+  CollectionHome: undefined;
   Details: { vehicle: VehicleDTO };
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const CollectionStack = createNativeStackNavigator<CollectionStackParamList>();
+
+function CollectionStackNavigator() {
+  return (
+    <CollectionStack.Navigator
+      initialRouteName="CollectionHome"
+      screenOptions={{
+        headerStyle: { backgroundColor: colors.surfaceLight },
+        headerTintColor: colors.primary,
+        headerTitleStyle: { fontWeight: 'bold' },
+      }}
+    >
+      <CollectionStack.Screen 
+        name="CollectionHome" 
+        component={HomeScreen} 
+        options={{ headerShown: false }} 
+      />
+      <CollectionStack.Screen 
+        name="Details" 
+        component={DetailsScreen} 
+        options={({ route }) => ({ title: `${route.params.vehicle.make} ${route.params.vehicle.model}` })}
+      />
+    </CollectionStack.Navigator>
+  );
+}
+
+// Main Bottom Tab Navigator
+export type RootTabParamList = {
+  Accueil: undefined;
+  Collection: undefined;
+  'À Propos': undefined;
+  Contact: undefined;
+};
+
+const Tab = createBottomTabNavigator<RootTabParamList>();
 
 const CyberTheme = {
   ...DarkTheme,
@@ -28,25 +67,43 @@ const CyberTheme = {
 export function AppNavigator() {
   return (
     <NavigationContainer theme={CyberTheme}>
-      <Stack.Navigator 
-        initialRouteName="Home"
+      <Tab.Navigator
+        initialRouteName="Accueil"
         screenOptions={{
-          headerStyle: { backgroundColor: colors.surfaceLight },
-          headerTintColor: colors.primary,
-          headerTitleStyle: { fontWeight: 'bold' },
+          headerShown: false,
+          tabBarStyle: {
+            backgroundColor: colors.surface,
+            borderTopColor: colors.surfaceBorder,
+          },
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: '#64748b',
+          tabBarLabelStyle: {
+            fontFamily: 'monospace',
+            fontSize: 10,
+          }
         }}
       >
-        <Stack.Screen 
-          name="Home" 
-          component={HomeScreen} 
-          options={{ headerShown: false }} 
+        <Tab.Screen 
+          name="Accueil" 
+          component={LandingScreen} 
+          options={{ tabBarIcon: () => null }}
         />
-        <Stack.Screen 
-          name="Details" 
-          component={DetailsScreen} 
-          options={({ route }) => ({ title: `${route.params.vehicle.make} ${route.params.vehicle.model}` })}
+        <Tab.Screen 
+          name="Collection" 
+          component={CollectionStackNavigator} 
+          options={{ tabBarIcon: () => null }}
         />
-      </Stack.Navigator>
+        <Tab.Screen 
+          name="À Propos" 
+          component={AboutScreen} 
+          options={{ tabBarIcon: () => null }}
+        />
+        <Tab.Screen 
+          name="Contact" 
+          component={ContactScreen} 
+          options={{ tabBarIcon: () => null }}
+        />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
