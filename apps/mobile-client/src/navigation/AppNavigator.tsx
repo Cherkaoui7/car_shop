@@ -64,45 +64,58 @@ const CyberTheme = {
   },
 };
 
+import { Ionicons } from '@expo/vector-icons';
+import { Platform } from 'react-native';
+
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 export function AppNavigator() {
+  const insets = useSafeAreaInsets();
+
   return (
     <NavigationContainer theme={CyberTheme}>
       <Tab.Navigator
         initialRouteName="Accueil"
-        screenOptions={{
+        screenOptions={({ route }) => ({
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: colors.surface,
-            borderTopColor: colors.surfaceBorder,
+            backgroundColor: '#020617', // Solid dark color
+            borderTopColor: 'rgba(6, 182, 212, 0.3)',
+            borderTopWidth: 1,
+            minHeight: 65 + (Platform.OS === 'ios' ? insets.bottom : Math.min(insets.bottom, 15)), 
+            paddingBottom: 10 + (Platform.OS === 'ios' ? insets.bottom : Math.min(insets.bottom, 15)),
+            paddingTop: 10,
           },
           tabBarActiveTintColor: colors.primary,
-          tabBarInactiveTintColor: '#64748b',
+          tabBarInactiveTintColor: '#475569',
           tabBarLabelStyle: {
-            fontFamily: 'monospace',
+            fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
             fontSize: 10,
-          }
-        }}
+            fontWeight: 'bold',
+            marginTop: 4,
+            paddingBottom: Platform.OS === 'ios' ? 0 : 4,
+          },
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName: keyof typeof Ionicons.glyphMap = 'home';
+            
+            if (route.name === 'Accueil') {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === 'Collection') {
+              iconName = focused ? 'car-sport' : 'car-sport-outline';
+            } else if (route.name === 'À Propos') {
+              iconName = focused ? 'business' : 'business-outline';
+            } else if (route.name === 'Contact') {
+              iconName = focused ? 'mail' : 'mail-outline';
+            }
+
+            return <Ionicons name={iconName} size={24} color={color} />;
+          },
+        })}
       >
-        <Tab.Screen 
-          name="Accueil" 
-          component={LandingScreen} 
-          options={{ tabBarIcon: () => null }}
-        />
-        <Tab.Screen 
-          name="Collection" 
-          component={CollectionStackNavigator} 
-          options={{ tabBarIcon: () => null }}
-        />
-        <Tab.Screen 
-          name="À Propos" 
-          component={AboutScreen} 
-          options={{ tabBarIcon: () => null }}
-        />
-        <Tab.Screen 
-          name="Contact" 
-          component={ContactScreen} 
-          options={{ tabBarIcon: () => null }}
-        />
+        <Tab.Screen name="Accueil" component={LandingScreen} />
+        <Tab.Screen name="Collection" component={CollectionStackNavigator} />
+        <Tab.Screen name="À Propos" component={AboutScreen} />
+        <Tab.Screen name="Contact" component={ContactScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );

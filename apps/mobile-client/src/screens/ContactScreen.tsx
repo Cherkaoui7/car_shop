@@ -1,68 +1,73 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Platform, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Platform, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { colors } from '@carshop/design-tokens';
 
 export function ContactScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.header}>
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>NOUS CONTACTER</Text>
-          </View>
-          <Text style={styles.title}>
-            Contactez-<Text style={styles.titleHighlight}>Nous</Text>
-          </Text>
-        </View>
-
-        <View style={styles.infoContainer}>
-          <View style={styles.card}>
-            <Text style={styles.cardSubtitle}>NOS BUREAUX</Text>
-            <Text style={styles.cardTitle}>Bureau Principal</Text>
-            <Text style={styles.cardText}>
-              Technopolis Park{'\n'}Rabat 11100{'\n'}Maroc
+      <KeyboardAvoidingView 
+        style={{ flex: 1 }} 
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+          <View style={styles.header}>
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>NOUS CONTACTER</Text>
+            </View>
+            <Text style={styles.title}>
+              Contactez-<Text style={styles.titleHighlight}>Nous</Text>
             </Text>
           </View>
 
-          <View style={styles.card}>
-            <Text style={styles.cardSubtitle}>APPELEZ-NOUS</Text>
-            <Text style={styles.cardTitle}>+212 537 000 000</Text>
-            <Text style={styles.cardText}>contact@carstore.com</Text>
-          </View>
-        </View>
-
-        <View style={styles.formContainer}>
-          <Text style={styles.inputLabel}>VOTRE NOM</Text>
-          <TextInput 
-            style={styles.input} 
-            placeholder="Comment vous appelez-vous ?" 
-            placeholderTextColor="#475569" 
-          />
-
-          <Text style={styles.inputLabel}>VOTRE E-MAIL</Text>
-          <TextInput 
-            style={styles.input} 
-            placeholder="Pour qu'on puisse vous répondre" 
-            placeholderTextColor="#475569"
-            keyboardType="email-address"
-          />
-
-          <Text style={styles.inputLabel}>VOTRE MESSAGE</Text>
-          <TextInput 
-            style={[styles.input, styles.textArea]} 
-            placeholder="Dites-nous tout..." 
-            placeholderTextColor="#475569"
-            multiline
-            numberOfLines={4}
-          />
-
-          <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-            <View style={styles.buttonContent}>
-              <Text style={styles.buttonText}>ENVOYER LE MESSAGE</Text>
+          <View style={styles.infoContainer}>
+            <View style={styles.card}>
+              <Text style={styles.cardSubtitle}>NOS BUREAUX</Text>
+              <Text style={styles.cardTitle}>Bureau Principal</Text>
+              <Text style={styles.cardText}>
+                Technopolis Park{'\n'}Rabat 11100{'\n'}Maroc
+              </Text>
             </View>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+
+            <View style={styles.card}>
+              <Text style={styles.cardSubtitle}>APPELEZ-NOUS</Text>
+              <Text style={styles.cardTitle}>+212 537 000 000</Text>
+              <Text style={styles.cardText}>contact@carstore.com</Text>
+            </View>
+          </View>
+
+          <View style={styles.formContainer}>
+            <Text style={styles.inputLabel}>VOTRE NOM</Text>
+            <TextInput 
+              style={styles.input} 
+              placeholder="Comment vous appelez-vous ?" 
+              placeholderTextColor="#475569" 
+            />
+
+            <Text style={styles.inputLabel}>VOTRE E-MAIL</Text>
+            <TextInput 
+              style={styles.input} 
+              placeholder="Pour qu'on puisse vous répondre" 
+              placeholderTextColor="#475569"
+              keyboardType="email-address"
+            />
+
+            <Text style={styles.inputLabel}>VOTRE MESSAGE</Text>
+            <TextInput 
+              style={[styles.input, styles.textArea]} 
+              placeholder="Dites-nous tout..." 
+              placeholderTextColor="#475569"
+              multiline
+              numberOfLines={4}
+            />
+
+            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+              <View style={styles.buttonContent}>
+                <Text style={styles.buttonText}>ENVOYER LE MESSAGE</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
