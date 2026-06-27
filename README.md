@@ -147,6 +147,38 @@ pnpm exec turbo link
 pnpm exec turbo link
 ```
 
+
+
+### Terminal 1: The API Gateway
+
+This boots up the backend and the database connection on port `5000`.
+
+<pre><div node="[object Object]" class="relative whitespace-pre-wrap word-break-all my-2 rounded-xl bg-muted border"><div class="min-h-7 relative box-border flex flex-row items-center justify-between rounded-t border-b border-border px-2 py-0.5"><div class="font-sans text-sm text-muted-foreground">bash</div><div class="flex flex-row gap-2 justify-end"></div></div><div class="p-3"><div class="w-full h-full text-xs cursor-text"><div class="code-block"><div class="code-line" data-line-number="1" data-line-start="1" data-line-end="1"><div class="line-content"><span class="mtk16">pnpm</span><span class="mtk1"></span><span class="mtk6">--filter</span><span class="mtk1"></span><span class="mtk12">@carshop/api</span><span class="mtk1"></span><span class="mtk12">dev</span></div></div></div></div></div></div></pre>
+
+### Terminal 2: The Next.js Web Storefront
+
+This boots up the server-side rendered website on port `3000`.
+
+<pre><div node="[object Object]" class="relative whitespace-pre-wrap word-break-all my-2 rounded-xl bg-muted border"><div class="min-h-7 relative box-border flex flex-row items-center justify-between rounded-t border-b border-border px-2 py-0.5"><div class="font-sans text-sm text-muted-foreground">bash</div><div class="flex flex-row gap-2 justify-end"></div></div><div class="p-3"><div class="w-full h-full text-xs cursor-text"><div class="code-block"><div class="code-line" data-line-number="1" data-line-start="1" data-line-end="1"><div class="line-content"><span class="mtk16">pnpm</span><span class="mtk1"></span><span class="mtk6">--filter</span><span class="mtk1"></span><span class="mtk12">@carshop/web</span><span class="mtk1"></span><span class="mtk12">dev</span></div></div></div></div></div></div></pre>
+
+### Terminal 3: The Expo Mobile App
+
+This launches the React Native Metro bundler on port `8081`.
+
+<pre><div node="[object Object]" class="relative whitespace-pre-wrap word-break-all my-2 rounded-xl bg-muted border"><div class="min-h-7 relative box-border flex flex-row items-center justify-between rounded-t border-b border-border px-2 py-0.5"><div class="font-sans text-sm text-muted-foreground">bash</div><div class="flex flex-row gap-2 justify-end"></div></div><div class="p-3"><div class="w-full h-full text-xs cursor-text"><div class="code-block"><div class="code-line" data-line-number="1" data-line-start="1" data-line-end="1"><div class="line-content"><span class="mtk16">pnpm</span><span class="mtk1"></span><span class="mtk6">--filter</span><span class="mtk1"></span><span class="mtk12">@carshop/mobile</span><span class="mtk1"></span><span class="mtk12">dev</span></div></div></div></div></div></div></pre>
+
+*(Optional) Terminal 4: The Database Viewer* If you ever need to manually inspect the PostgreSQL tables or clear out stuck reservations:
+
+<pre><div node="[object Object]" class="relative whitespace-pre-wrap word-break-all my-2 rounded-xl bg-muted border"><div class="min-h-7 relative box-border flex flex-row items-center justify-between rounded-t border-b border-border px-2 py-0.5"><div class="font-sans text-sm text-muted-foreground">bash</div><div class="flex flex-row gap-2 justify-end"></div></div><div class="p-3"><div class="w-full h-full text-xs cursor-text"><div class="code-block"><div class="code-line" data-line-number="1" data-line-start="1" data-line-end="1"><div class="line-content"><span class="mtk16">pnpm</span><span class="mtk1"></span><span class="mtk6">--filter</span><span class="mtk1"></span><span class="mtk12">@carshop/db</span><span class="mtk1"></span><span class="mtk12">exec</span><span class="mtk1"></span><span class="mtk12">prisma</span><span class="mtk1"></span><span class="mtk12">studio</span></div></div></div></div></div></div></pre>
+
+### 🚨 Pro-Tip for Zombie Ports
+
+If you ever press `Ctrl+C` and the port gets stuck again, don't waste time trying to figure out which process is hung. Just drop this nuclear command into PowerShell to instantly free all your ports:
+
+<pre><div node="[object Object]" class="relative whitespace-pre-wrap word-break-all my-2 rounded-xl bg-muted border"><div class="min-h-7 relative box-border flex flex-row items-center justify-between rounded-t border-b border-border px-2 py-0.5"><div class="font-sans text-sm text-muted-foreground">powershell</div><div class="flex flex-row gap-2 justify-end"></div></div><div class="p-3"><div class="w-full h-full text-xs cursor-text"><div class="code-block"><div class="code-line" data-line-number="1" data-line-start="1" data-line-end="1"><div class="line-content"><span class="mtk16">Stop-Process</span><span class="mtk1"></span><span class="mtk3">-</span><span class="mtk1">Name node </span><span class="mtk3">-</span><span class="mtk1">Force</span></div></div></div></div></div></div></pre>
+
+
+
 ## Useful Links
 
 Learn more about the power of Turborepo:

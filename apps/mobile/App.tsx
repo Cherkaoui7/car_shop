@@ -7,7 +7,7 @@ import { VehicleDTO } from '@carshop/schema';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 
 // Use the EXPO_PUBLIC_API_URL from .env or fallback to the correct physical IP
-const NATIVE_API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.4:5000/api/v1';
+const NATIVE_API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.11:5000/api/v1';
 apiClient.defaults.baseURL = NATIVE_API_URL;
 
 export default function App() {
