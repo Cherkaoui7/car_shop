@@ -7,6 +7,8 @@ import { DetailsScreen } from '../screens/DetailsScreen';
 import { LandingScreen } from '../screens/LandingScreen';
 import { AboutScreen } from '../screens/AboutScreen';
 import { ContactScreen } from '../screens/ContactScreen';
+import { LoginScreen } from '../screens/LoginScreen';
+import { RegisterScreen } from '../screens/RegisterScreen';
 import { colors } from '@carshop/design-tokens';
 import { VehicleDTO } from '@carshop/schema';
 
@@ -42,12 +44,45 @@ function CollectionStackNavigator() {
   );
 }
 
+// Auth Stack Navigator
+export type AuthStackParamList = {
+  Login: undefined;
+  Register: undefined;
+};
+
+const AuthStack = createNativeStackNavigator<AuthStackParamList>();
+
+function AuthStackNavigator() {
+  return (
+    <AuthStack.Navigator
+      initialRouteName="Login"
+      screenOptions={{
+        headerStyle: { backgroundColor: colors.surfaceLight },
+        headerTintColor: colors.primary,
+        headerTitleStyle: { fontWeight: 'bold' },
+      }}
+    >
+      <AuthStack.Screen 
+        name="Login" 
+        component={LoginScreen} 
+        options={{ headerShown: false }} 
+      />
+      <AuthStack.Screen 
+        name="Register" 
+        component={RegisterScreen} 
+        options={{ headerShown: false }} 
+      />
+    </AuthStack.Navigator>
+  );
+}
+
 // Main Bottom Tab Navigator
 export type RootTabParamList = {
   Accueil: undefined;
   Collection: undefined;
   'À Propos': undefined;
   Contact: undefined;
+  Profil: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -106,6 +141,8 @@ export function AppNavigator() {
               iconName = focused ? 'business' : 'business-outline';
             } else if (route.name === 'Contact') {
               iconName = focused ? 'mail' : 'mail-outline';
+            } else if (route.name === 'Profil') {
+              iconName = focused ? 'person' : 'person-outline';
             }
 
             return <Ionicons name={iconName} size={24} color={color} />;
@@ -116,6 +153,7 @@ export function AppNavigator() {
         <Tab.Screen name="Collection" component={CollectionStackNavigator} />
         <Tab.Screen name="À Propos" component={AboutScreen} />
         <Tab.Screen name="Contact" component={ContactScreen} />
+        <Tab.Screen name="Profil" component={AuthStackNavigator} />
       </Tab.Navigator>
     </NavigationContainer>
   );

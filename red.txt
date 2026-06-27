@@ -1,0 +1,19 @@
+Terminal 1: The API Gateway
+This boots up the backend and the database connection on port 5000.
+
+bash
+pnpm --filter @carshop/api dev
+Terminal 2: The Next.js Web Storefront
+This boots up the server-side rendered website on port 3000.
+
+bash
+pnpm --filter @carshop/web dev
+Terminal 3: The Expo Mobile App
+This launches the React Native Metro bundler on port 8081.
+
+bash
+pnpm --filter @carshop/mobile dev
+(Optional) Terminal 4: The Database Viewer If you ever need to manually inspect the PostgreSQL tables or clear out stuck reservations:
+
+bash
+pnpm --filter @carshop/db exec prisma studio
