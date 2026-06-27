@@ -1,6 +1,7 @@
 // apps/web/src/app/layout.tsx
 import "./globals.css";
 import Link from "next/link";
+import UserMenu from "@/components/UserMenu";
 
 export const metadata = {
   title: "AURORA // Terminal 04",
@@ -58,25 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               
               <div className="h-4 w-px bg-surfaceBorder mx-1 hidden sm:block" />
 
-              <Link
-                href="/login"
-                className="px-4 py-1.5 text-xs font-mono font-semibold text-textMuted hover:text-primary hover:bg-primary/5 rounded-lg transition"
-              >
-                CONNEXION
-              </Link>
-              <Link
-                href="/register"
-                className="px-4 py-1.5 text-xs font-mono font-bold text-primary bg-primary/10 border border-primary/20 hover:bg-primary/20 rounded-lg transition"
-              >
-                S'INSCRIRE
-              </Link>
-
-              <Link
-                href="/admin/ingest"
-                className="ml-2 px-4 py-1.5 text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 rounded-lg transition"
-              >
-                AJOUTER UN VÉHICULE
-              </Link>
+              <UserMenu />
             </div>
           </nav>
         </header>

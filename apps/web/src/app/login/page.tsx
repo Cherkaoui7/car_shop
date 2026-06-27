@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import CyberRain from '../../components/CyberRain';
 
 import { useRouter } from 'next/navigation';
@@ -12,13 +12,21 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      router.push('/');
+    }
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('http://localhost:5000/api/v1/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,15 +37,23 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Erreur lors de la connexion');
+        let errorMessage = data.error;
+        if (Array.isArray(data.error)) {
+          errorMessage = data.error.map((e: any) => e.message).join(', ');
+        } else if (typeof data.error === 'object') {
+          errorMessage = JSON.stringify(data.error);
+        }
+        throw new Error(errorMessage || 'Erreur lors de la connexion');
       }
 
       // Store the token and user info
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      alert("Connexion réussie ! Bienvenue dans votre espace.");
-      router.push('/');
+      setShowSuccessPopup(true);
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
     } catch (err: any) {
       setError(err.message === 'INVALID_CREDENTIALS' 
         ? 'Email ou mot de passe incorrect' 

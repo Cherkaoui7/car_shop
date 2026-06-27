@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import CyberRain from '../../components/CyberRain';
 
 import { useRouter } from 'next/navigation';
@@ -15,6 +15,14 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      router.push('/');
+    }
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +34,7 @@ export default function RegisterPage() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/register', {
+      const response = await fetch('http://localhost:5000/api/v1/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,11 +50,19 @@ export default function RegisterPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Erreur lors de la création du compte');
+        let errorMessage = data.error;
+        if (Array.isArray(data.error)) {
+          errorMessage = data.error.map((e: any) => e.message).join(', ');
+        } else if (typeof data.error === 'object') {
+          errorMessage = JSON.stringify(data.error);
+        }
+        throw new Error(errorMessage || 'Erreur lors de la création du compte');
       }
 
-      alert("Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
-      router.push('/login');
+      setShowSuccessPopup(true);
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000);
     } catch (err: any) {
       setError(err.message);
     }
