@@ -1,16 +1,53 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Platform, TextInput, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Platform, TextInput, TouchableOpacity, KeyboardAvoidingView, Modal } from 'react-native';
 import { colors } from '@carshop/design-tokens';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function RegisterScreen({ navigation }: any) {
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleRegister = () => {
-    // TODO: Implement actual registration
-    Alert.alert("Création de Compte", `Demande de création pour ${email}`);
+  const handleRegister = async () => {
+    setError(null);
+    if (password !== confirmPassword) {
+      setError("Les mots de passe ne correspondent pas");
+      return;
+    }
+    
+    try {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Erreur lors de la création du compte');
+      }
+
+      // Show success modal
+      setShowSuccess(true);
+      
+      // Delay redirection
+      setTimeout(() => {
+        setShowSuccess(false);
+        navigation.navigate('Login');
+      }, 2000);
+      
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -30,14 +67,51 @@ export function RegisterScreen({ navigation }: any) {
           </View>
 
           <View style={styles.formContainer}>
-            <Text style={styles.inputLabel}>NOM COMPLET</Text>
-            <TextInput 
-              style={styles.input} 
-              placeholder="John Doe" 
-              placeholderTextColor="#475569"
-              value={name}
-              onChangeText={setName}
-            />
+            {/* Modal de Succès */}
+            <Modal
+              visible={showSuccess}
+              transparent={true}
+              animationType="fade"
+            >
+              <View style={styles.modalOverlay}>
+                <View style={styles.modalContent}>
+                  <View style={styles.modalIconContainer}>
+                    <Text style={styles.modalIconText}>✓</Text>
+                  </View>
+                  <Text style={styles.modalTitle}>Dossier Créé</Text>
+                  <Text style={styles.modalText}>Compte enregistré avec succès. Redirection vers l'interface de connexion...</Text>
+                </View>
+              </View>
+            </Modal>
+
+            {error && (
+              <View style={styles.errorBox}>
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            )}
+
+            <View style={styles.row}>
+              <View style={{ flex: 1, marginRight: 8 }}>
+                <Text style={styles.inputLabel}>PRÉNOM</Text>
+                <TextInput 
+                  style={styles.input} 
+                  placeholder="John" 
+                  placeholderTextColor="#475569"
+                  value={firstName}
+                  onChangeText={setFirstName}
+                />
+              </View>
+              <View style={{ flex: 1, marginLeft: 8 }}>
+                <Text style={styles.inputLabel}>NOM</Text>
+                <TextInput 
+                  style={styles.input} 
+                  placeholder="Doe" 
+                  placeholderTextColor="#475569"
+                  value={lastName}
+                  onChangeText={setLastName}
+                />
+              </View>
+            </View>
 
             <Text style={styles.inputLabel}>IDENTIFIANT (EMAIL)</Text>
             <TextInput 
@@ -112,6 +186,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 12,
   },
+  row: { flexDirection: 'row', justifyContent: 'space-between' },
   inputLabel: {
     fontSize: 10,
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
@@ -162,5 +237,69 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     fontSize: 10,
     fontWeight: 'bold',
+  },
+  errorBox: {
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.5)',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  errorText: {
+    color: '#ef4444',
+    fontSize: 12,
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+    textAlign: 'center',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(2, 6, 23, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#0f172a',
+    borderWidth: 1,
+    borderColor: 'rgba(6, 182, 212, 0.5)',
+    borderRadius: 16,
+    padding: 30,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 320,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  modalIconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalIconText: {
+    color: '#10b981',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  modalTitle: {
+    color: '#f8fafc',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textTransform: 'uppercase',
+  },
+  modalText: {
+    color: '#94a3b8',
+    fontSize: 12,
+    textAlign: 'center',
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+    lineHeight: 18,
   }
 });

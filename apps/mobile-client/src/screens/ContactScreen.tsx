@@ -1,10 +1,25 @@
-import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Platform, TextInput, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Platform, TextInput, TouchableOpacity, KeyboardAvoidingView, Modal } from 'react-native';
 import { colors } from '@carshop/design-tokens';
 
 export function ContactScreen() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
+
   const handleSend = () => {
-    Alert.alert("Transmission Réussie", "Votre message a été crypté et envoyé sur le réseau Aurora. Nous vous répondrons bientôt.");
+    // Show success modal
+    setShowSuccess(true);
+    // Clear inputs
+    setName('');
+    setEmail('');
+    setMessage('');
+    
+    // Hide modal after 4 seconds
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 4000);
   };
 
   return (
@@ -40,11 +55,30 @@ export function ContactScreen() {
           </View>
 
           <View style={styles.formContainer}>
+            {/* Modal de Succès */}
+            <Modal
+              visible={showSuccess}
+              transparent={true}
+              animationType="fade"
+            >
+              <View style={styles.modalOverlay}>
+                <View style={styles.modalContent}>
+                  <View style={styles.modalIconContainer}>
+                    <Text style={styles.modalIconText}>✓</Text>
+                  </View>
+                  <Text style={styles.modalTitle}>Message Envoyé !</Text>
+                  <Text style={styles.modalText}>Merci de nous avoir contactés. Nous vous répondrons dans les plus brefs délais.</Text>
+                </View>
+              </View>
+            </Modal>
+
             <Text style={styles.inputLabel}>VOTRE NOM</Text>
             <TextInput 
               style={styles.input} 
               placeholder="Comment vous appelez-vous ?" 
               placeholderTextColor="#475569" 
+              value={name}
+              onChangeText={setName}
             />
 
             <Text style={styles.inputLabel}>VOTRE E-MAIL</Text>
@@ -53,6 +87,9 @@ export function ContactScreen() {
               placeholder="Pour qu'on puisse vous répondre" 
               placeholderTextColor="#475569"
               keyboardType="email-address"
+              autoCapitalize="none"
+              value={email}
+              onChangeText={setEmail}
             />
 
             <Text style={styles.inputLabel}>VOTRE MESSAGE</Text>
@@ -62,6 +99,8 @@ export function ContactScreen() {
               placeholderTextColor="#475569"
               multiline
               numberOfLines={4}
+              value={message}
+              onChangeText={setMessage}
             />
 
             <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={handleSend}>
@@ -147,4 +186,54 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(6, 182, 212, 0.3)',
   },
   buttonText: { color: colors.primary, fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', fontSize: 12, fontWeight: 'bold' },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(2, 6, 23, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#0f172a',
+    borderWidth: 1,
+    borderColor: 'rgba(6, 182, 212, 0.5)',
+    borderRadius: 16,
+    padding: 30,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 320,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  modalIconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalIconText: {
+    color: '#10b981',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  modalTitle: {
+    color: '#f8fafc',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textTransform: 'uppercase',
+  },
+  modalText: {
+    color: '#94a3b8',
+    fontSize: 12,
+    textAlign: 'center',
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+    lineHeight: 18,
+  }
 });
