@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Platform, TextInput, TouchableOpacity, KeyboardAvoidingView, Modal } from 'react-native';
 import { colors } from '@carshop/design-tokens';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function RegisterScreen({ navigation }: any) {
   const [firstName, setFirstName] = useState('');

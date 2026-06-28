@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Platform, TextInput, TouchableOpacity, KeyboardAvoidingView, Modal } from 'react-native';
 import { colors } from '@carshop/design-tokens';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 
 export function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
@@ -12,9 +12,13 @@ export function LoginScreen({ navigation }: any) {
   // Check if already logged in
   useEffect(() => {
     const checkLogin = async () => {
-      const user = await AsyncStorage.getItem('user');
-      if (user) {
-        navigation.navigate('Home');
+      try {
+        const user = await SecureStore.getItemAsync('user');
+        if (user) {
+          navigation.navigate('Accueil');
+        }
+      } catch (e) {
+        // Handle error gracefully
       }
     };
     checkLogin();
@@ -37,15 +41,15 @@ export function LoginScreen({ navigation }: any) {
       const data = await response.json();
       
       // Save session
-      await AsyncStorage.setItem('accessToken', data.accessToken);
-      await AsyncStorage.setItem('user', JSON.stringify(data.user));
+      await SecureStore.setItemAsync('accessToken', data.accessToken);
+      await SecureStore.setItemAsync('user', JSON.stringify(data.user));
 
       // Show success modal
       setShowSuccess(true);
       
       setTimeout(() => {
         setShowSuccess(false);
-        navigation.navigate('Home');
+        navigation.navigate('Accueil');
       }, 2000);
       
     } catch (err: any) {
